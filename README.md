@@ -1,6 +1,6 @@
-#RockStarToCS
+# RockStarToCS
 
-###A transpiler from RockStar to C#
+### A transpiler from RockStar to C#
 
 This probably won't be the most amaxing transpiler ever but this is how I write compilers.
 Currently I am using a tool I wrote called Fastpass to generate the Parser.cs file from Grammer.fpg, I will release Fastpass opensource soon.
