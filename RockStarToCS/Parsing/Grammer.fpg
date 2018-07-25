@@ -1,0 +1,22 @@
+﻿//fastpassgen -f Grammer.fpg -o Parser.cs -n RockStarToCS.Parsing -t ParseNode -r root -at -s -mt
+
+//root node
+root => rstarprog => x[0] as ParseNode
+
+//rockstar program
+rstarprog => EOF => new ParseNodeList()
+
+//statements
+
+//functions
+
+//word sets
+wrdset => _wrdset => x[0] as ParseNode
+_wrdset => WORD _wrdset => { var lst = x[1] as ParseNodeList; lst.Add(new WordParseNode(x[0] as Token)); return lst; }
+_wrdset => WORD => new ParseNodeList(new WordParseNode(x[0] as Token))
+
+//empty line
+//can match to a single empty line or many
+eline => _eline => x[0] as ParseNode
+_eline => ELINE _eline => x[1] as ParseNode
+_eline => ELINE => new EmptyLineParseNode(x[0] as Token)
