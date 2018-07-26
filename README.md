@@ -1,10 +1,17 @@
-# RockStarToCS
+# RockStar CS
 
-### A transpiler from RockStar to C# AND RockStar interpreter
+### A RockStar interpreter and maybe C# transpiler written in C# and Fastpass-Grammer.
 
-This probably won't be the most amazing transpiler ever but this is how I write compilers.
-Currently I am using a tool I wrote called Fastpass to generate the Parser.cs file from Grammer.fpg, I will release Fastpass opensource soon.
+This will by no means be a production grade interpreter but I enjoy writing toy-compilers and interpreters
+so it should work reasonably well but it may give somewhat ambigous error messages depending on the type of error.
 
-This will probably be a bit of a mess for a while.
+This is a work in progress and currently only supports a subset of the RockStar language and won't be very usefull at the moment.
 
-When I have it working I will make an executable available as well as make an executable for fastpass available.
+Currently I am using a tool I wrote called Fastpass to generate the Parsing/Parser.cs file from Parsing/Grammer.fpg, I will release Fastpass opensource soon.
+
+When I have it working I will make an executable available to bypass the need to compile from source.
+
+___
+
+The idea is to make it work primarily as an interpreter and secondarily as a C# transpiler but if transpilation
+proves too difficult it will be scrapped.
