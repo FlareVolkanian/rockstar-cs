@@ -16,7 +16,7 @@ namespace RockStarToCS
         Object
     }
 
-    class Variable
+    class BuildVariable
     {
         private string _CodeName;
         public VariableType Type { get; set; }
@@ -24,7 +24,7 @@ namespace RockStarToCS
         public string CodeName => _CodeName + CodeCount;
         public int CodeCount { get; set; }
 
-        public Variable(VariableType Type, string Name)
+        public BuildVariable(VariableType Type, string Name)
         {
             this.Type = Type;
             this.Name = Name;

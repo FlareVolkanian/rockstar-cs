@@ -35,9 +35,6 @@ namespace RockStarToCS.Parsing
                 typeOfAssignment = VariableType.Numeric;
                 value = "";
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
-                //the nodes are parsed in backwards so they need to be reversed
-                //otherwise "Tommy was a lean mean wrecking machine" is interpreted as "Tommy was machine wrecking mean lean a"
-                wordNodes.Reverse();
                 wordNodes.ForEach(pn => value += (pn as WordParseNode).Text.Length % 10);
             }
 
@@ -45,10 +42,11 @@ namespace RockStarToCS.Parsing
 
             if(Env.CurrentContext.VariableExists(Variable.Name))
             {
-                Variable existingVar = Env.CurrentContext.GetVariable(Variable.Name);
+                BuildVariable existingVar = Env.CurrentContext.GetVariable(Variable.Name);
                 if(existingVar.Type != typeOfAssignment)
                 {
                     existingVar.CodeCount++;
+                    existingVar.Type = typeOfAssignment;
                     cs.Add(existingVar.CSType + " " + existingVar.CodeName + " = " + value + ";", T.LineNumber);
                 }
                 else
@@ -58,7 +56,7 @@ namespace RockStarToCS.Parsing
             }
             else
             {
-                Variable newVariable = new Variable(typeOfAssignment, Variable.Name);
+                BuildVariable newVariable = new BuildVariable(typeOfAssignment, Variable.Name);
                 Env.CurrentContext.AddVariable(newVariable);
                 cs.Add(newVariable.CSType + " " + newVariable.CodeName + " = " + value + ";", T.LineNumber);
             }

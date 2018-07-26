@@ -77,6 +77,13 @@ namespace RockStarToCS.Parsing
             defs.Add("over", "DIV", InvalidKeyWordEndings);
             defs.Add("by", "DIV", InvalidKeyWordEndings);
 
+            //I/O
+            defs.Add("Say", "SAY", InvalidKeyWordEndings);
+            defs.Add("Shout", "SAY", InvalidKeyWordEndings);
+            defs.Add("Whisper", "SAY", InvalidKeyWordEndings);
+            defs.Add("Listen to", "LSTN", InvalidKeyWordEndings);
+            defs.Add("Listen", "LSTN", InvalidKeyWordEndings);
+
             //types
             //undefined
             defs.Add("mysterious", "UNDEF", InvalidKeyWordEndings);
@@ -195,6 +202,7 @@ namespace RockStarToCS.Parsing
             {
                 if (StrPtr >= Text.Length)
                 {
+                    tokens.Add(new Token("NL", "NL", line));//shhh this is our secret...
                     tokens.Add(new Token("EOF", "EOF", line));
                     break;
                 }
@@ -204,15 +212,19 @@ namespace RockStarToCS.Parsing
                 if(TokenDefinition.Matches(Text, StrPtr, "\n"))
                 {
                     StrPtr++;
+                    int oldStrPtr = StrPtr;
                     line++;
                     StrPtr = SkipCommentsAndWhiteSpace(Text, StrPtr);
                     if(TokenDefinition.Matches(Text, StrPtr, "\n"))
                     {
                         StrPtr++;
                         line++;
-                        tokens.Add(new Token("ELINE", ""));
+                        tokens.Add(new Token("ELINE", "ELINE"));
                         continue;
                     }
+                    StrPtr = oldStrPtr;
+                    tokens.Add(new Token("NL", "NL"));
+                    continue;
                 }
                 if (StrPtr >= Text.Length)
                 {

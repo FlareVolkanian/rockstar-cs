@@ -11,7 +11,7 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
-            string test = "Tommy was a lean mean wrecking machine";
+            string test = "Tommy was a lean mean wrecking machine\nShout Tommy";
             Tokeniser tok = new Tokeniser();
             List<Token> tokens = tok.Tokenise(test);
             Parser parser = new Parser();
@@ -23,7 +23,7 @@ namespace RockStarToCS
 
                 CSResult result = root.BuildToCS(env);
                 string code = "";
-                result.GeneratedCS.ForEach(cs => code += cs.CS);
+                result.GeneratedCS.ForEach(cs => code += cs.CS + "\n");
                 Console.WriteLine(code);
             }
             Console.ReadKey();

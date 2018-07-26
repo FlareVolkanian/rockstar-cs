@@ -10,15 +10,15 @@ namespace RockStarToCS
     {
         public BuildContext Parent { get; private set; }
 
-        private Dictionary<string, Variable> Variables;
+        private Dictionary<string, BuildVariable> Variables;
 
         public BuildContext (BuildContext Parent)
         {
             this.Parent = Parent;
-            this.Variables = new Dictionary<string, Variable>();
+            this.Variables = new Dictionary<string, BuildVariable>();
         }
 
-        public void AddVariable(Variable Var)
+        public void AddVariable(BuildVariable Var)
         {
             Variables.Add(Var.Name, Var);
         }
@@ -53,7 +53,7 @@ namespace RockStarToCS
             return true;
         }
 
-        public Variable GetVariable(string Name)
+        public BuildVariable GetVariable(string Name)
         {
             if(Variables.ContainsKey(Name))
             {

@@ -83,43 +83,29 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches_stmtlst()
+        private ParseNode Matches_stmtlst_1()
         {
-            //stmtlst => _stmtlst
-            int ti = TokenIndex;
-            object[] matches = new object[1];
-            if((matches[0] = Matches__stmtlst()) != null)
-            {
-                Func<object[], ParseNode> f = x => x[0] as ParseNode;
-                return f(matches);
-            }
-            TokenIndex = ti;
-            return null;
-        }
-
-        private ParseNode Matches__stmtlst_1()
-        {
-            //_stmtlst => stmt _stmtlst
+            //stmtlst => stmtlst stmtlst
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = Matches_stmt()) != null && (matches[1] = Matches__stmtlst()) != null)
+            if((matches[0] = Matches_stmtlst(1)) != null && (matches[1] = Matches_stmtlst()) != null)
             {
-                Func<object[], ParseNode> f = x => { var lst = x[1] as ParseNodeList; lst.Add(x[0] as ParseNode); return lst; };
+                Func<object[], ParseNode> f = x => { var lst =x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; };
                 return f(matches);
             }
             TokenIndex = ti;
             return null;
         }
 
-        private ParseNode Matches__stmtlst(int RuleIndex=0)
+        private ParseNode Matches_stmtlst(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //_stmtlst => stmt _stmtlst
-            if(RuleIndex != 1 && (matches = Matches__stmtlst_1()) != null)
+            //stmtlst => stmtlst stmtlst
+            if(RuleIndex != 1 && (matches = Matches_stmtlst_1()) != null)
             {
                 return matches;
             }
-            //_stmtlst => stmt
+            //stmtlst => stmt
             if(RuleIndex != 2 && (matches = Matches_stmt()) != null)
             {
                 Func<object[], ParseNode> f = x => new ParseNodeList(x[0] as ParseNode);
@@ -128,17 +114,91 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches_stmt()
+        private ParseNode Matches_stmt_1()
         {
-            //stmt => ass
+            //stmt => ass NL
             int ti = TokenIndex;
-            object[] matches = new object[1];
-            if((matches[0] = Matches_ass()) != null)
+            object[] matches = new object[2];
+            if((matches[0] = Matches_ass()) != null && (matches[1] = TokenMatches("NL")) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(matches);
             }
             TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_stmt_2()
+        {
+            //stmt => io NL
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = Matches_io()) != null && (matches[1] = TokenMatches("NL")) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_stmt(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //stmt => ass NL
+            if(RuleIndex != 1 && (matches = Matches_stmt_1()) != null)
+            {
+                return matches;
+            }
+            //stmt => io NL
+            if(RuleIndex != 2 && (matches = Matches_stmt_2()) != null)
+            {
+                return matches;
+            }
+            return null;
+        }
+
+        private ParseNode Matches_io_1()
+        {
+            //io => SAY var
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = TokenMatches("SAY")) != null && (matches[1] = Matches_var()) != null)
+            {
+                Func<object[], ParseNode> f = x => new OutputParseNode(x[0] as Token, x[1] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_io_2()
+        {
+            //io => LSTN var
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = TokenMatches("LSTN")) != null && (matches[1] = Matches_var()) != null)
+            {
+                Func<object[], ParseNode> f = x => new InputParseNode(x[0] as Token, x[1] as VariableParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_io(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //io => SAY var
+            if(RuleIndex != 1 && (matches = Matches_io_1()) != null)
+            {
+                return matches;
+            }
+            //io => LSTN var
+            if(RuleIndex != 2 && (matches = Matches_io_2()) != null)
+            {
+                return matches;
+            }
             return null;
         }
 
@@ -312,43 +372,29 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches_wrdlst()
+        private ParseNode Matches_wrdlst_1()
         {
-            //wrdlst => _wrdlst
-            int ti = TokenIndex;
-            object[] matches = new object[1];
-            if((matches[0] = Matches__wrdlst()) != null)
-            {
-                Func<object[], ParseNode> f = x => x[0] as ParseNode;
-                return f(matches);
-            }
-            TokenIndex = ti;
-            return null;
-        }
-
-        private ParseNode Matches__wrdlst_1()
-        {
-            //_wrdlst => wrd _wrdlst
+            //wrdlst => wrdlst wrdlst
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = Matches_wrd()) != null && (matches[1] = Matches__wrdlst()) != null)
+            if((matches[0] = Matches_wrdlst(1)) != null && (matches[1] = Matches_wrdlst()) != null)
             {
-                Func<object[], ParseNode> f = x => { var lst = x[1] as ParseNodeList; lst.Add(x[0] as ParseNode); return lst; };
+                Func<object[], ParseNode> f = x => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; };
                 return f(matches);
             }
             TokenIndex = ti;
             return null;
         }
 
-        private ParseNode Matches__wrdlst(int RuleIndex=0)
+        private ParseNode Matches_wrdlst(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //_wrdlst => wrd _wrdlst
-            if(RuleIndex != 1 && (matches = Matches__wrdlst_1()) != null)
+            //wrdlst => wrdlst wrdlst
+            if(RuleIndex != 1 && (matches = Matches_wrdlst_1()) != null)
             {
                 return matches;
             }
-            //_wrdlst => wrd
+            //wrdlst => wrd
             if(RuleIndex != 2 && (matches = Matches_wrd()) != null)
             {
                 Func<object[], ParseNode> f = x => new ParseNodeList(x[0] as ParseNode);
@@ -401,37 +447,23 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches_eline()
+        private ParseNode Matches_eline_1()
         {
-            //eline => _eline
-            int ti = TokenIndex;
-            object[] matches = new object[1];
-            if((matches[0] = Matches__eline()) != null)
-            {
-                Func<object[], ParseNode> f = x => x[0] as ParseNode;
-                return f(matches);
-            }
-            TokenIndex = ti;
-            return null;
-        }
-
-        private ParseNode Matches__eline_1()
-        {
-            //_eline => ELINE _eline
+            //eline => eline eline
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = TokenMatches("ELINE")) != null && (matches[1] = Matches__eline()) != null)
+            if((matches[0] = Matches_eline(1)) != null && (matches[1] = Matches_eline()) != null)
             {
-                Func<object[], ParseNode> f = x => x[1] as ParseNode;
+                Func<object[], ParseNode> f = x => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; };
                 return f(matches);
             }
             TokenIndex = ti;
             return null;
         }
 
-        private ParseNode Matches__eline_2()
+        private ParseNode Matches_eline_2()
         {
-            //_eline => ELINE
+            //eline => ELINE
             int ti = TokenIndex;
             object[] matches = new object[1];
             if((matches[0] = TokenMatches("ELINE")) != null)
@@ -443,9 +475,9 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches__eline_3()
+        private ParseNode Matches_eline_3()
         {
-            //_eline => EOF
+            //eline => EOF
             int ti = TokenIndex;
             object[] matches = new object[1];
             if((matches[0] = TokenMatches("EOF")) != null)
@@ -457,21 +489,21 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches__eline(int RuleIndex=0)
+        private ParseNode Matches_eline(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //_eline => ELINE _eline
-            if(RuleIndex != 1 && (matches = Matches__eline_1()) != null)
+            //eline => eline eline
+            if(RuleIndex != 1 && (matches = Matches_eline_1()) != null)
             {
                 return matches;
             }
-            //_eline => ELINE
-            if(RuleIndex != 2 && (matches = Matches__eline_2()) != null)
+            //eline => ELINE
+            if(RuleIndex != 2 && (matches = Matches_eline_2()) != null)
             {
                 return matches;
             }
-            //_eline => EOF
-            if(RuleIndex != 3 && (matches = Matches__eline_3()) != null)
+            //eline => EOF
+            if(RuleIndex != 3 && (matches = Matches_eline_3()) != null)
             {
                 return matches;
             }

@@ -53,6 +53,7 @@
     <Compile Include="Parsing\BooleanParseNode.cs" />
     <Compile Include="Parsing\EmptyLineParseNode.cs" />
     <Compile Include="Parsing\NullParseNode.cs" />
+    <Compile Include="Parsing\OutputParseNode.cs" />
     <Compile Include="Parsing\ParseNode.cs" />
     <Compile Include="Parsing\ParseNodeList.cs" />
     <Compile Include="Parsing\Parser.cs" />
