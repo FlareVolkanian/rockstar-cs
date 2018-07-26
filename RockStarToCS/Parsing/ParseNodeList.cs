@@ -31,6 +31,20 @@ namespace RockStarToCS.Parsing
             }
         }
 
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            CSLineList cs = new CSLineList();
+            foreach(ParseNode node in Nodes)
+            {
+                CSResult result = node.BuildToCS(Env);
+                if(result.GeneratedCS != null)
+                {
+                    cs.AddRange(result.GeneratedCS);
+                }
+            }
+            return new CSResult() { GeneratedCS = cs, ReturnType = null };
+        }
+
         public List<ParseNode> GetNodes()
         {
             return Nodes;

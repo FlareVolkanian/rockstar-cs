@@ -25,5 +25,10 @@ namespace RockStarToCS.Parsing
             Name = string.Empty;
             IsProper = false;
         }
+
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

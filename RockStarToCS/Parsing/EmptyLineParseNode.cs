@@ -9,5 +9,10 @@ namespace RockStarToCS.Parsing
     class EmptyLineParseNode : ParseNode
     {
         public EmptyLineParseNode(Token T) : base(T) { }
+
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

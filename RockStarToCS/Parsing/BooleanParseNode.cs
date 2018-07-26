@@ -13,5 +13,10 @@ namespace RockStarToCS.Parsing
         {
             Value = T.Name == "TRUE";
         }
+
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

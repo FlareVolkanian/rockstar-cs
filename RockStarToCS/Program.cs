@@ -16,6 +16,17 @@ namespace RockStarToCS
             List<Token> tokens = tok.Tokenise(test);
             Parser parser = new Parser();
             ParseNode root = parser.Parse(tokens);
+
+            if (root != null)
+            {
+                BuildEnvironment env = new BuildEnvironment();
+
+                CSResult result = root.BuildToCS(env);
+                string code = "";
+                result.GeneratedCS.ForEach(cs => code += cs.CS);
+                Console.WriteLine(code);
+            }
+            Console.ReadKey();
         }
     }
 }

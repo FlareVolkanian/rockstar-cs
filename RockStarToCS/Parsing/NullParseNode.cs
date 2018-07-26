@@ -12,5 +12,10 @@ namespace RockStarToCS.Parsing
         {
 
         }
+
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

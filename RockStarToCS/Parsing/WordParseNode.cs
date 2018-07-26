@@ -14,5 +14,10 @@ namespace RockStarToCS.Parsing
         {
             Text = T.Value;
         }
+
+        public override CSResult BuildToCS(BuildEnvironment Env)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

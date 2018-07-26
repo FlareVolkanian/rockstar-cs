@@ -262,9 +262,9 @@ namespace RockStarToCS.Parsing
 
         private int SkipComments(string Text, int StrPtr)
         {
-            if (TokenDefinition.Matches(Text, StrPtr, "/*"))
+            if (TokenDefinition.Matches(Text, StrPtr, "("))
             {
-                while (!TokenDefinition.Matches(Text, StrPtr, "*/"))
+                while (!TokenDefinition.Matches(Text, StrPtr, ")"))
                 {
                     if (TokenDefinition.Matches(Text, StrPtr, "\n"))
                     {
@@ -272,14 +272,7 @@ namespace RockStarToCS.Parsing
                     }
                     StrPtr++;
                 }
-                StrPtr += 2;
-            }
-            else if (TokenDefinition.Matches(Text, StrPtr, "//"))
-            {
-                while (!TokenDefinition.Matches(Text, StrPtr, "\n"))
-                {
-                    StrPtr++;
-                }
+                StrPtr++;
             }
             return StrPtr;
         }

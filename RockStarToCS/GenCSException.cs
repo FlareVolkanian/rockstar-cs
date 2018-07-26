@@ -1,20 +1,18 @@
-﻿using System;
+﻿using RockStarToCS.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RockStarToCS.Parsing
+namespace RockStarToCS
 {
-    abstract class ParseNode
+    class GenCSException : Exception
     {
         public Token T { get; set; }
-
-        public ParseNode(Token T)
+        public GenCSException(string Message, Token T) : base(Message + " on line: " + T.LineNumber)
         {
             this.T = T;
         }
-
-        public abstract CSResult BuildToCS(BuildEnvironment Env);
     }
 }
