@@ -1,10 +1,12 @@
-﻿using System;
+﻿using RockStarToCS.Compile;
+using RockStarToCS.Interpreter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RockStarToCS.Parsing
+namespace RockStarToCS.Parsing.ParseNodes
 {
     abstract class ParseNode
     {
@@ -16,5 +18,6 @@ namespace RockStarToCS.Parsing
         }
 
         public abstract CSResult BuildToCS(BuildEnvironment Env);
+        public abstract InterpreterResult Interpret(InterpreterEnvironment Env);
     }
 }

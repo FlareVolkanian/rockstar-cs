@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RockStarToCS.Parsing.ParseNodes;
 
 /* Warning: this file is generated, changes made here may be be overwritten. */
 

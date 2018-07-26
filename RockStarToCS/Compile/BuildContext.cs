@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RockStarToCS
+namespace RockStarToCS.Compile
 {
     class BuildContext
     {
@@ -40,7 +40,7 @@ namespace RockStarToCS
         {
             if(Variables.ContainsKey(Name))
             {
-                if (Variables[Name].Type == VariableType.Undefined)
+                if (Variables[Name].Type == BuildVariableType.Undefined)
                 {
                     return true;
                 }

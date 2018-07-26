@@ -1,10 +1,12 @@
-﻿using System;
+﻿using RockStarToCS.Compile;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RockStarToCS.Interpreter;
 
-namespace RockStarToCS.Parsing
+namespace RockStarToCS.Parsing.ParseNodes
 {
     class AssignmentParseNode : ParseNode
     {
@@ -18,21 +20,21 @@ namespace RockStarToCS.Parsing
 
         public override CSResult BuildToCS(BuildEnvironment Env)
         {
-            VariableType typeOfAssignment = VariableType.Undefined;
+            BuildVariableType typeOfAssignment = BuildVariableType.Undefined;
             string value = "null";
             if(Value is BooleanParseNode)
             {
-                typeOfAssignment = VariableType.Boolean;
+                typeOfAssignment = BuildVariableType.Boolean;
                 value = (Value as BooleanParseNode).Value ? "true" : "false";
             }
             else if(Value is NullParseNode)
             {
-                typeOfAssignment = VariableType.Null;
+                typeOfAssignment = BuildVariableType.Null;
                 value = "null";
             }
             else if(Value is ParseNodeList)
             {
-                typeOfAssignment = VariableType.Numeric;
+                typeOfAssignment = BuildVariableType.Numeric;
                 value = "";
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
                 wordNodes.ForEach(pn => value += (pn as WordParseNode).Text.Length % 10);
@@ -61,6 +63,57 @@ namespace RockStarToCS.Parsing
                 cs.Add(newVariable.CSType + " " + newVariable.CodeName + " = " + value + ";", T.LineNumber);
             }
             return new CSResult() { GeneratedCS = cs, ReturnType = null };
+        }
+
+        public override InterpreterResult Interpret(InterpreterEnvironment Env)
+        {
+            InterpreterVariableType typeOfAssignment = InterpreterVariableType.Null;
+            object value = null;
+            if(Value is BooleanParseNode)
+            {
+                typeOfAssignment = InterpreterVariableType.Boolean;
+                value = (Value as BooleanParseNode).Value;
+            }
+            else if(Value is NullParseNode)
+            {
+                typeOfAssignment = InterpreterVariableType.Null;
+                value = null;
+            }
+            else if(Value is ParseNodeList)
+            {
+                typeOfAssignment = InterpreterVariableType.Numeric;
+                string strValue = "";
+                List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
+                wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Length % 10);
+                value = decimal.Parse(strValue);
+            }
+            InterpreterVariable variable = null;
+            if(Variable.IsLast)
+            {
+                if(Env.CurrentContext.LastVariable != null)
+                {
+                    variable = Env.CurrentContext.LastVariable;
+                }
+                else
+                {
+                    throw new InterpreterException("Invalid use of " + Variable.T.Value, Variable.T);
+                }
+            }
+            else if(Env.CurrentContext.VariableExists(Variable.Name))
+            {
+                variable = Env.CurrentContext.GetVariable(Variable.Name);
+            }
+            else
+            {
+                variable = new InterpreterVariable(Variable.Name, typeOfAssignment);
+                Env.CurrentContext.AddVariable(variable);
+            }
+            if(variable.Type != typeOfAssignment)
+            {
+                variable.Type = typeOfAssignment;
+            }
+            variable.Value = value;
+            return new InterpreterResult() { Type = InterpreterVariableType.Null };
         }
     }
 }

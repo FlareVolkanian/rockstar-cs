@@ -1,5 +1,7 @@
 ﻿//fastpassgen -f Grammer.fpg -o Parser.cs -n RockStarToCS.Parsing -t ParseNode -r root -at -s
 
+using RockStarToCS.Parsing.ParseNodes
+
 //root node
 root => rstarprog => x[0] as ParseNode
 

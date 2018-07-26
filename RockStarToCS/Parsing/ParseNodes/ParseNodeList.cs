@@ -1,10 +1,12 @@
-﻿using System;
+﻿using RockStarToCS.Compile;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RockStarToCS.Interpreter;
 
-namespace RockStarToCS.Parsing
+namespace RockStarToCS.Parsing.ParseNodes
 {
     class ParseNodeList : ParseNode
     {
@@ -48,6 +50,15 @@ namespace RockStarToCS.Parsing
         public List<ParseNode> GetNodes()
         {
             return Nodes;
+        }
+
+        public override InterpreterResult Interpret(InterpreterEnvironment Env)
+        {
+            foreach(ParseNode node in Nodes)
+            {
+                node.Interpret(Env);
+            }
+            return new InterpreterResult();
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RockStarToCS
+namespace RockStarToCS.Compile
 {
     class CSResult
     {
         public CSLineList GeneratedCS { get; set; }
-        public VariableType? ReturnType { get; set; }
+        public BuildVariableType? ReturnType { get; set; }
     }
 }

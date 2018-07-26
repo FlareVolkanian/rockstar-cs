@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RockStarToCS
+namespace RockStarToCS.Compile
 {
-    enum VariableType
+    enum BuildVariableType
     {
         Null,
         Undefined,
@@ -19,12 +19,12 @@ namespace RockStarToCS
     class BuildVariable
     {
         private string _CodeName;
-        public VariableType Type { get; set; }
+        public BuildVariableType Type { get; set; }
         public string Name { get; set; }
         public string CodeName => _CodeName + CodeCount;
         public int CodeCount { get; set; }
 
-        public BuildVariable(VariableType Type, string Name)
+        public BuildVariable(BuildVariableType Type, string Name)
         {
             this.Type = Type;
             this.Name = Name;
@@ -49,17 +49,17 @@ namespace RockStarToCS
             {
                 switch (Type)
                 {
-                    case VariableType.Boolean:
+                    case BuildVariableType.Boolean:
                         return "bool?";
-                    case VariableType.Null:
+                    case BuildVariableType.Null:
                         return "object?";
-                    case VariableType.Numeric:
+                    case BuildVariableType.Numeric:
                         return "decimal?";
-                    case VariableType.Object:
+                    case BuildVariableType.Object:
                         return "object";
-                    case VariableType.String:
+                    case BuildVariableType.String:
                         return "string";
-                    case VariableType.Undefined:
+                    case BuildVariableType.Undefined:
                         return "object";
                 }
                 return "object";

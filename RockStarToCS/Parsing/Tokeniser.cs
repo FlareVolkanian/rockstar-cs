@@ -23,22 +23,6 @@ namespace RockStarToCS.Parsing
             
             //most of the tokens are defined here, a couple such as EOF and ELINE (empty line) are defined in the Tokenise method
 
-            //proper variables
-            defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
-            {
-                string name = "";
-                if (TokenDefinition.IsBetween(Text, StrPtr, 'A', 'Z'))
-                {
-                    while(TokenDefinition.IsBetween(Text, StrPtr, 'A', 'Z') || TokenDefinition.IsBetween(Text, StrPtr, 'a', 'z') || (TokenDefinition.Matches(Text, StrPtr, " ") && TokenDefinition.IsBetween(Text, ++StrPtr, 'A', 'Z')))
-                    {
-                        name += Text[StrPtr];
-                        StrPtr++;
-                    }
-                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("PVAR", name) };
-                }
-                return null;
-            }));
-
             //common variable specifiers
             defs.Add("a", "CVARSP", InvalidKeyWordEndings);
             defs.Add("an", "CVARSP", InvalidKeyWordEndings);
@@ -173,6 +157,22 @@ namespace RockStarToCS.Parsing
             }));
             //object
             //uhh...
+
+            //proper variables
+            defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
+            {
+                string name = "";
+                if (TokenDefinition.IsBetween(Text, StrPtr, 'A', 'Z'))
+                {
+                    while (TokenDefinition.IsBetween(Text, StrPtr, 'A', 'Z') || TokenDefinition.IsBetween(Text, StrPtr, 'a', 'z') || (TokenDefinition.Matches(Text, StrPtr, " ") && TokenDefinition.IsBetween(Text, ++StrPtr, 'A', 'Z')))
+                    {
+                        name += Text[StrPtr];
+                        StrPtr++;
+                    }
+                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("PVAR", name) };
+                }
+                return null;
+            }));
 
             //words
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
