@@ -67,6 +67,16 @@ namespace RockStarToCS.Parsing
             //poetic string literals
             defs.Add("says", "SAYS", InvalidKeyWordEndings);
 
+            //arithmetic
+            defs.Add("plus", "ADD", InvalidKeyWordEndings);
+            defs.Add("with", "ADD", InvalidKeyWordEndings);
+            defs.Add("minus", "SUB", InvalidKeyWordEndings);
+            defs.Add("without", "SUB", InvalidKeyWordEndings);
+            defs.Add("times", "MULT", InvalidKeyWordEndings);
+            defs.Add("of", "MULT", InvalidKeyWordEndings);
+            defs.Add("over", "DIV", InvalidKeyWordEndings);
+            defs.Add("by", "DIV", InvalidKeyWordEndings);
+
             //types
             //undefined
             defs.Add("mysterious", "UNDEF", InvalidKeyWordEndings);
