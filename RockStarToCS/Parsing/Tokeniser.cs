@@ -15,11 +15,14 @@ namespace RockStarToCS.Parsing
 
         private string InvalidKeyWordEndings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV";
         private string LowerCase = "abcdefghijklmnopqrstuvwxyz";
+        private string NumberChars = "0123456789";
 
         public Tokeniser()
         {
             TokenDefinitionList defs = new TokenDefinitionList();
             
+            //most of the tokens are defined here, a couple such as EOF and ELINE (empty line) are defined in the Tokenise method
+
             //proper variables
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
@@ -43,15 +46,124 @@ namespace RockStarToCS.Parsing
             defs.Add("my", "CVAR", InvalidKeyWordEndings);
             defs.Add("your", "CVAR", InvalidKeyWordEndings);
 
+            //last variable
+            defs.Add("it", "LVAR", InvalidKeyWordEndings);
+            defs.Add("he", "LVAR", InvalidKeyWordEndings);
+            defs.Add("she", "LVAR", InvalidKeyWordEndings);
+            defs.Add("him", "LVAR", InvalidKeyWordEndings);
+            defs.Add("her", "LVAR", InvalidKeyWordEndings);
+            defs.Add("them", "LVAR", InvalidKeyWordEndings);
+            defs.Add("they", "LVAR", InvalidKeyWordEndings);
 
+            //assignment
+            defs.Add("put", "PUT", InvalidKeyWordEndings);
+            defs.Add("into", "INTO", InvalidKeyWordEndings);
+
+            //poetic literals
+            //poetic type literals
+            defs.Add("is", "IS", InvalidKeyWordEndings);
+            defs.Add("was", "IS", InvalidKeyWordEndings);
+            defs.Add("were", "IS", InvalidKeyWordEndings);
+            //poetic string literals
+            defs.Add("says", "SAYS", InvalidKeyWordEndings);
+
+            //types
+            //undefined
+            defs.Add("mysterious", "UNDEF", InvalidKeyWordEndings);
+            //null
+            defs.Add("nothing", "NULL", InvalidKeyWordEndings);
+            defs.Add("nowhere", "NULL", InvalidKeyWordEndings);
+            defs.Add("nobody", "NULL", InvalidKeyWordEndings);
+            defs.Add("null", "NULL", InvalidKeyWordEndings);
+            //boolean
+            defs.Add("true", "BOOL", InvalidKeyWordEndings);
+            defs.Add("false", "BOOL", InvalidKeyWordEndings);
+            defs.Add("right", "BOOL", InvalidKeyWordEndings);
+            defs.Add("yes", "BOOL", InvalidKeyWordEndings);
+            defs.Add("ok", "BOOL", InvalidKeyWordEndings);
+            defs.Add("wrong", "BOOL", InvalidKeyWordEndings);
+            defs.Add("no", "BOOL", InvalidKeyWordEndings);
+            defs.Add("lies", "BOOL", InvalidKeyWordEndings);
+            //numeric litterals
+            defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
+            {
+                if(TokenDefinition.InSet(Text, StrPtr, NumberChars))
+                {
+                    string value = "";
+                    while(TokenDefinition.InSet(Text, StrPtr, NumberChars))
+                    {
+                        value += Text[StrPtr++];
+                    }
+                    //allow a single decimal place
+                    if(TokenDefinition.Matches(Text, StrPtr, "."))
+                    {
+                        value += ".";
+                        StrPtr++;
+                    }
+                    while(TokenDefinition.InSet(Text, StrPtr, NumberChars))
+                    {
+                        value += Text[StrPtr++];
+                    }
+                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("NUM", value) };
+                }
+                return null;
+            }));
+            //string literal
+            defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
+            {
+                if (TokenDefinition.Matches(Text, StrPtr, "\""))
+                {
+                    StrPtr++;
+                    string value = "";
+                    char last = ' ';
+                    // I don't know if escape characters exist in RockStar, but they do in this implementation...
+                    while (!(TokenDefinition.Matches(Text, StrPtr, "\"") && !TokenDefinition.Matches(Text, StrPtr - 1, "\\\"")))
+                    {
+                        char c = Text[StrPtr++];
+                        if(last == '\\')
+                        {
+                            if(c == '"')
+                            {
+                                value += "\"";
+                            }
+                            else if(c == 'n')
+                            {
+                                value += "\n";
+                            }
+                            else if(c == 't')
+                            {
+                                value += "\t";
+                            }
+                            else if(c == '\\')
+                            {
+                                value += "\\";
+                            }
+                            else
+                            {
+                                throw new TokenException("Invalid escape character: \\" + c);
+                            }
+                        }
+                        last = c;
+                        if(c == '\\')
+                        {
+                            continue;
+                        }
+                        value += c;
+                    }
+                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("STR", value) };
+                }
+                return null;
+            }));
+            //object
+            //uhh...
 
             //words
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
-                if(TokenDefinition.InSet(Text, StrPtr, LowerCase))
+                if(TokenDefinition.InSet(Text, StrPtr, LowerCase) || TokenDefinition.Matches(Text, StrPtr, "'"))
                 {
                     string text = "";
-                    while(TokenDefinition.InSet(Text, StrPtr, LowerCase))
+                    while(TokenDefinition.InSet(Text, StrPtr, LowerCase) || TokenDefinition.Matches(Text, StrPtr, "'"))
                     {
                         text += Text[StrPtr];
                         StrPtr++;
@@ -82,9 +194,12 @@ namespace RockStarToCS.Parsing
                 if(TokenDefinition.Matches(Text, StrPtr, "\n"))
                 {
                     StrPtr++;
+                    line++;
                     StrPtr = SkipCommentsAndWhiteSpace(Text, StrPtr);
                     if(TokenDefinition.Matches(Text, StrPtr, "\n"))
                     {
+                        StrPtr++;
+                        line++;
                         tokens.Add(new Token("ELINE", ""));
                         continue;
                     }

@@ -6,6 +6,14 @@ root => rstarprog => x[0] as ParseNode
 //rockstar program
 rstarprog => EOF => new ParseNodeList()
 
+//blocks
+blk => stmtlst eline => x[0] as ParseNode
+
+//statement list
+stmtlst => _stmtlst => x[0] as ParseNode
+_stmtlst => stmt _stmtlst => { var lst = x[1] as ParseNodeList; lst.Add(x[0] as ParseNode); return lst; }
+_stmtlst => stmt => new ParseNodeList(x[0] as ParseNode)
+
 //statements
 
 //functions
@@ -20,3 +28,4 @@ _wrdset => WORD => new ParseNodeList(new WordParseNode(x[0] as Token))
 eline => _eline => x[0] as ParseNode
 _eline => ELINE _eline => x[1] as ParseNode
 _eline => ELINE => new EmptyLineParseNode(x[0] as Token)
+_eline => EOF => new EmptyLineParseNode(x[0] as Token)
