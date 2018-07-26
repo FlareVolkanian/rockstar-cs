@@ -1,10 +1,12 @@
-﻿//fastpassgen -f Grammer.fpg -o Parser.cs -n RockStarToCS.Parsing -t ParseNode -r root -at -s -mt
+﻿//fastpassgen -f Grammer.fpg -o Parser.cs -n RockStarToCS.Parsing -t ParseNode -r root -at -s
 
 //root node
 root => rstarprog => x[0] as ParseNode
 
 //rockstar program
 rstarprog => EOF => new ParseNodeList()
+//just the one block allowed for now
+rstarprog => blk => x[0] as ParseNode
 
 //blocks
 blk => stmtlst eline => x[0] as ParseNode
@@ -15,13 +17,31 @@ _stmtlst => stmt _stmtlst => { var lst = x[1] as ParseNodeList; lst.Add(x[0] as 
 _stmtlst => stmt => new ParseNodeList(x[0] as ParseNode)
 
 //statements
+stmt => ass => x[0] as ParseNode
 
 //functions
 
-//word sets
-wrdset => _wrdset => x[0] as ParseNode
-_wrdset => WORD _wrdset => { var lst = x[1] as ParseNodeList; lst.Add(new WordParseNode(x[0] as Token)); return lst; }
-_wrdset => WORD => new ParseNodeList(new WordParseNode(x[0] as Token))
+//assignments
+ass => var IS NULL => new AssignmentParseNode(x[1] as Token, new NullParseNode(x[2] as Token), x[0] as VariableParseNode)
+ass => var IS bool => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
+ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
+
+//variables
+var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[1] as Token).Value, false)
+var => PVAR => new VariableParseNode(x[0] as Token, (x[0] as Token).Value, true)
+var => LVAR => new VariableParseNode(x[0] as Token)
+
+//booleans
+bool => TRUE => new BooleanParseNode(x[0] as Token)
+bool => FALSE => new BooleanParseNode(x[0] as Token)
+
+//word lists
+wrdlst => _wrdlst => x[0] as ParseNode
+_wrdlst => wrd _wrdlst => { var lst = x[1] as ParseNodeList; lst.Add(x[0] as ParseNode); return lst; }
+_wrdlst => wrd => new ParseNodeList(x[0] as ParseNode)
+
+wrd => WORD => new WordParseNode(x[0] as Token)
+wrd => CVARSP => new WordParseNode(x[0] as Token)
 
 //empty line
 //can match to a single empty line or many

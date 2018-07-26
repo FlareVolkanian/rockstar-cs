@@ -43,6 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\AssignmentParseNode.cs" />
+    <Compile Include="Parsing\BooleanParseNode.cs" />
+    <Compile Include="Parsing\EmptyLineParseNode.cs" />
+    <Compile Include="Parsing\NullParseNode.cs" />
+    <Compile Include="Parsing\ParseNode.cs" />
+    <Compile Include="Parsing\ParseNodeList.cs" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\Tokeniser.cs" />
+    <Compile Include="Parsing\VariableParseNode.cs" />
+    <Compile Include="Parsing\WordParseNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

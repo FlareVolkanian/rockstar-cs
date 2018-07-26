@@ -34,17 +34,17 @@ namespace RockStarToCS.Parsing
                         name += Text[StrPtr];
                         StrPtr++;
                     }
-                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("VAR", name) };
+                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("PVAR", name) };
                 }
                 return null;
             }));
 
             //common variable specifiers
-            defs.Add("a", "CVAR", InvalidKeyWordEndings);
-            defs.Add("an", "CVAR", InvalidKeyWordEndings);
-            defs.Add("the", "CVAR", InvalidKeyWordEndings);
-            defs.Add("my", "CVAR", InvalidKeyWordEndings);
-            defs.Add("your", "CVAR", InvalidKeyWordEndings);
+            defs.Add("a", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("an", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("the", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("my", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("your", "CVARSP", InvalidKeyWordEndings);
 
             //last variable
             defs.Add("it", "LVAR", InvalidKeyWordEndings);
@@ -86,14 +86,14 @@ namespace RockStarToCS.Parsing
             defs.Add("nobody", "NULL", InvalidKeyWordEndings);
             defs.Add("null", "NULL", InvalidKeyWordEndings);
             //boolean
-            defs.Add("true", "BOOL", InvalidKeyWordEndings);
-            defs.Add("false", "BOOL", InvalidKeyWordEndings);
-            defs.Add("right", "BOOL", InvalidKeyWordEndings);
-            defs.Add("yes", "BOOL", InvalidKeyWordEndings);
-            defs.Add("ok", "BOOL", InvalidKeyWordEndings);
-            defs.Add("wrong", "BOOL", InvalidKeyWordEndings);
-            defs.Add("no", "BOOL", InvalidKeyWordEndings);
-            defs.Add("lies", "BOOL", InvalidKeyWordEndings);
+            defs.Add("true", "TRUE", InvalidKeyWordEndings);
+            defs.Add("right", "TRUE", InvalidKeyWordEndings);
+            defs.Add("yes", "TRUE", InvalidKeyWordEndings);
+            defs.Add("ok", "TRUE", InvalidKeyWordEndings);
+            defs.Add("false", "FALSE", InvalidKeyWordEndings);
+            defs.Add("wrong", "FALSE", InvalidKeyWordEndings);
+            defs.Add("no", "FALSE", InvalidKeyWordEndings);
+            defs.Add("lies", "FALSE", InvalidKeyWordEndings);
             //numeric litterals
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
@@ -376,7 +376,6 @@ namespace RockStarToCS.Parsing
     {
         private string TextToMatch { get; set; }
         private string TokenName { get; set; }
-        private string AltTokenName { get; set; }
         private string InvalidEndings { get; set; }
 
         public ConstantDefinition(string TextToMatch, string TokenName, string InvalidEndings)
@@ -393,14 +392,6 @@ namespace RockStarToCS.Parsing
             InvalidEndings = "";
         }
 
-        public ConstantDefinition(string TextToMatch, string TokenName, string TokenAltName, string InvalidEndings)
-        {
-            this.TextToMatch = TextToMatch;
-            this.TokenName = TokenName;
-            this.AltTokenName = TokenAltName;
-            this.InvalidEndings = InvalidEndings;
-        }
-
         public TokenResult Match(string Text, int StrPtr)
         {
             if (TokenDefinition.Matches(Text, StrPtr, TextToMatch))
@@ -411,10 +402,6 @@ namespace RockStarToCS.Parsing
                     {
                         return null;
                     }
-                }
-                if (!string.IsNullOrWhiteSpace(AltTokenName))
-                {
-                    return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, AltTokenName, TextToMatch) };
                 }
                 return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, TextToMatch) };
             }
@@ -446,11 +433,6 @@ namespace RockStarToCS.Parsing
         public void Add(string TextToMatch, string TokenName, string InvalidEndings)
         {
             Add(new ConstantDefinition(TextToMatch, TokenName, InvalidEndings));
-        }
-
-        public void Add(string TextToMatch, string TokenName, string AltTokenName, string InvalidEndings)
-        {
-            Add(new ConstantDefinition(TextToMatch, TokenName, AltTokenName, InvalidEndings));
         }
 
         public void Add(string TextToMatch, string TokenName)

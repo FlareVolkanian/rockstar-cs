@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RockStarToCS.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,11 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
+            string test = "Tommy was a lean mean wrecking machine";
+            Tokeniser tok = new Tokeniser();
+            List<Token> tokens = tok.Tokenise(test);
+            Parser parser = new Parser();
+            ParseNode root = parser.Parse(tokens);
         }
     }
 }
