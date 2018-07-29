@@ -33,6 +33,7 @@ io => LSTN var => new InputParseNode(x[0] as Token, x[1] as VariableParseNode)
 ass => var IS NULL => new AssignmentParseNode(x[1] as Token, new NullParseNode(x[2] as Token), x[0] as VariableParseNode)
 ass => var IS bool => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
 ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
+ass => var IS STR => new AssignmentParseNode(x[1] as Token, new StringParseNode(x[2] as Token, (x[2] as Token).Value), x[0] as VariableParseNode)
 
 //variables
 var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[1] as Token).Value, false)

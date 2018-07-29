@@ -143,6 +143,8 @@ namespace RockStarToCS.Parsing
                             {
                                 throw new TokenException("Invalid escape character: \\" + c);
                             }
+                            last = c;
+                            continue;
                         }
                         last = c;
                         if(c == '\\')
@@ -151,6 +153,7 @@ namespace RockStarToCS.Parsing
                         }
                         value += c;
                     }
+                    StrPtr++;
                     return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("STR", value) };
                 }
                 return null;

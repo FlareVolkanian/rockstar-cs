@@ -39,6 +39,11 @@ namespace RockStarToCS.Parsing.ParseNodes
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
                 wordNodes.ForEach(pn => value += (pn as WordParseNode).Text.Length % 10);
             }
+            else if(Value is StringParseNode)
+            {
+                typeOfAssignment = BuildVariableType.String;
+                value = (Value as StringParseNode).Value;
+            }
 
             CSLineList cs = new CSLineList();
 
@@ -86,6 +91,11 @@ namespace RockStarToCS.Parsing.ParseNodes
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
                 wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Length % 10);
                 value = decimal.Parse(strValue);
+            }
+            else if(Value is StringParseNode)
+            {
+                typeOfAssignment = InterpreterVariableType.String;
+                value = (Value as StringParseNode).Value;
             }
             InterpreterVariable variable = null;
             if(Variable.IsLast)

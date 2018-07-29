@@ -245,6 +245,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_ass_4()
+        {
+            //ass => var IS STR
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("STR")) != null)
+            {
+                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, new StringParseNode(x[2] as Token, (x[2] as Token).Value), x[0] as VariableParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_ass(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -260,6 +274,11 @@ namespace RockStarToCS.Parsing
             }
             //ass => var IS wrdlst
             if(RuleIndex != 3 && (matches = Matches_ass_3()) != null)
+            {
+                return matches;
+            }
+            //ass => var IS STR
+            if(RuleIndex != 4 && (matches = Matches_ass_4()) != null)
             {
                 return matches;
             }
