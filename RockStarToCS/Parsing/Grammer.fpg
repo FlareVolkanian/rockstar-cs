@@ -36,7 +36,7 @@ ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode
 ass => var IS STR => new AssignmentParseNode(x[1] as Token, new StringParseNode(x[2] as Token, (x[2] as Token).Value), x[0] as VariableParseNode)
 
 //variables
-var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[1] as Token).Value, false)
+var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false)
 var => PVAR => new VariableParseNode(x[0] as Token, (x[0] as Token).Value, true)
 var => LVAR => new VariableParseNode(x[0] as Token)
 

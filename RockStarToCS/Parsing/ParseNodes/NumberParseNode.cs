@@ -8,13 +8,13 @@ using RockStarToCS.Interpreter;
 
 namespace RockStarToCS.Parsing.ParseNodes
 {
-    class StringParseNode : ParseNode
+    class NumberParseNode : ParseNode
     {
-        public string Value { get; set; }
+        public decimal Value { get; set; }
 
-        public StringParseNode(Token T, string Value) : base(T)
+        public NumberParseNode(Token T, string NumberValue) : base(T)
         {
-            this.Value = Value;
+            Value = decimal.Parse(NumberValue);
         }
 
         public override CSResult BuildToCS(BuildEnvironment Env)
@@ -24,7 +24,7 @@ namespace RockStarToCS.Parsing.ParseNodes
 
         public override InterpreterResult Interpret(InterpreterEnvironment Env)
         {
-            return new InterpreterResult() { Value = Value, Type = InterpreterVariableType.String };
+            return new InterpreterResult() { Value = Value, Type = InterpreterVariableType.Numeric };
         }
     }
 }

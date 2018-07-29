@@ -74,17 +74,7 @@ namespace RockStarToCS.Parsing.ParseNodes
         {
             InterpreterVariableType typeOfAssignment = InterpreterVariableType.Null;
             object value = null;
-            if(Value is BooleanParseNode)
-            {
-                typeOfAssignment = InterpreterVariableType.Boolean;
-                value = (Value as BooleanParseNode).Value;
-            }
-            else if(Value is NullParseNode)
-            {
-                typeOfAssignment = InterpreterVariableType.Null;
-                value = null;
-            }
-            else if(Value is ParseNodeList)
+            if(Value is ParseNodeList)
             {
                 typeOfAssignment = InterpreterVariableType.Numeric;
                 string strValue = "";
@@ -92,10 +82,11 @@ namespace RockStarToCS.Parsing.ParseNodes
                 wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Length % 10);
                 value = decimal.Parse(strValue);
             }
-            else if(Value is StringParseNode)
+            else
             {
-                typeOfAssignment = InterpreterVariableType.String;
-                value = (Value as StringParseNode).Value;
+                InterpreterResult rhsResult = Value.Interpret(Env);
+                typeOfAssignment = rhsResult.Type;
+                value = rhsResult.Value;
             }
             InterpreterVariable variable = null;
             if(Variable.IsLast)

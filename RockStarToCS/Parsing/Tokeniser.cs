@@ -25,12 +25,17 @@ namespace RockStarToCS.Parsing
 
             //common variable specifiers
             defs.Add("a", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("A", "CVARSP", InvalidKeyWordEndings);
             defs.Add("an", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("An", "CVARSP", InvalidKeyWordEndings);
             defs.Add("the", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("The", "CVARSP", InvalidKeyWordEndings);
             defs.Add("my", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("My", "CVARSP", InvalidKeyWordEndings);
             defs.Add("your", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("Your", "CVARSP", InvalidKeyWordEndings);
 
-            //last variable
+            //last variable/pronouns
             defs.Add("it", "LVAR", InvalidKeyWordEndings);
             defs.Add("he", "LVAR", InvalidKeyWordEndings);
             defs.Add("she", "LVAR", InvalidKeyWordEndings);
@@ -38,6 +43,14 @@ namespace RockStarToCS.Parsing
             defs.Add("her", "LVAR", InvalidKeyWordEndings);
             defs.Add("them", "LVAR", InvalidKeyWordEndings);
             defs.Add("they", "LVAR", InvalidKeyWordEndings);
+            defs.Add("ze", "LVAR", InvalidKeyWordEndings);
+            defs.Add("hir", "LVAR", InvalidKeyWordEndings);
+            defs.Add("zie", "LVAR", InvalidKeyWordEndings);
+            defs.Add("zir", "LVAR", InvalidKeyWordEndings);
+            defs.Add("xe", "LVAR", InvalidKeyWordEndings);
+            defs.Add("xem", "LVAR", InvalidKeyWordEndings);
+            defs.Add("ve", "LVAR", InvalidKeyWordEndings);
+            defs.Add("ver", "LVAR", InvalidKeyWordEndings);
 
             //assignment
             defs.Add("put", "PUT", InvalidKeyWordEndings);
@@ -76,6 +89,8 @@ namespace RockStarToCS.Parsing
             defs.Add("nowhere", "NULL", InvalidKeyWordEndings);
             defs.Add("nobody", "NULL", InvalidKeyWordEndings);
             defs.Add("null", "NULL", InvalidKeyWordEndings);
+            defs.Add("empty", "NULL", InvalidKeyWordEndings);
+            defs.Add("gone", "NULL", InvalidKeyWordEndings);
             //boolean
             defs.Add("true", "TRUE", InvalidKeyWordEndings);
             defs.Add("right", "TRUE", InvalidKeyWordEndings);
@@ -177,6 +192,17 @@ namespace RockStarToCS.Parsing
                 return null;
             }));
 
+            //'s as is
+            defs.Add(new PreviousDependantDefinition((Text, StrPtr, Tokens) =>
+            {
+                if((Tokens.Count > 0 && Tokens.Last().Name == "PVAR") || (Tokens.Count > 1 && Tokens[Tokens.Count - 2].Name == "CVARSP") && TokenDefinition.Matches(Text, StrPtr, "'s"))
+                {
+                    StrPtr += 2;
+                    return new TokenDefinition.TokenResult() { NewStrPtr = StrPtr, T = new Token("IS", "'s") };
+                }
+                return null;
+            }));
+
             //words
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
@@ -185,6 +211,12 @@ namespace RockStarToCS.Parsing
                     string text = "";
                     while(TokenDefinition.InSet(Text, StrPtr, LowerCase) || TokenDefinition.Matches(Text, StrPtr, "'"))
                     {
+                        //skip over apostrophies
+                        if(TokenDefinition.Matches(Text, StrPtr, "'"))
+                        {
+                            StrPtr++;
+                            continue;
+                        }
                         text += Text[StrPtr];
                         StrPtr++;
                     }
@@ -245,6 +277,10 @@ namespace RockStarToCS.Parsing
                     else if (tc is ConstantDefinition)
                     {
                         tr = (tc as ConstantDefinition).Match(Text, StrPtr);
+                    }
+                    else if(tc is PreviousDependantDefinition)
+                    {
+                        tr = (tc as PreviousDependantDefinition).Match(Text, StrPtr, tokens);
                     }
                     if (tr != null)
                     {
@@ -431,6 +467,18 @@ namespace RockStarToCS.Parsing
         public MatchFunc Match { get; set; }
 
         public MatchingTokenDefinition(MatchFunc Match)
+        {
+            this.Match = Match;
+        }
+    }
+
+    class PreviousDependantDefinition : TokenDefinition
+    {
+        public delegate TokenResult MatchFunc(string Text, int StrPtr, List<Token> Tokens);
+
+        public MatchFunc Match { get; set; }
+
+        public PreviousDependantDefinition(MatchFunc Match)
         {
             this.Match = Match;
         }

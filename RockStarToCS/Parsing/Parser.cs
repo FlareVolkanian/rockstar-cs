@@ -292,7 +292,7 @@ namespace RockStarToCS.Parsing
             object[] matches = new object[2];
             if((matches[0] = TokenMatches("CVARSP")) != null && (matches[1] = TokenMatches("WORD")) != null)
             {
-                Func<object[], ParseNode> f = x => new VariableParseNode(x[0] as Token, (x[1] as Token).Value, false);
+                Func<object[], ParseNode> f = x => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false);
                 return f(matches);
             }
             TokenIndex = ti;

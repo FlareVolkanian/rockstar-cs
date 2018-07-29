@@ -22,7 +22,7 @@ namespace RockStarToCS.Parsing.ParseNodes
 
         public override InterpreterResult Interpret(InterpreterEnvironment Env)
         {
-            throw new NotImplementedException();
+            return new InterpreterResult() { Type = InterpreterVariableType.Null, Value = null };
         }
     }
 }
