@@ -14,7 +14,7 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
-            string test = "Tommy's a lean mean wrecking machine\nShout it\nBuild him up\nShout it\nKnock him down\nShout it";
+            string test = "Tommy's a lean mean wreckin' machine\nShout it\nBuild him up\nShout it\nKnock him down\nShout it";
             Tokeniser tok = new Tokeniser();
             List<Token> tokens = tok.Tokenise(test);
             Parser parser = new Parser();

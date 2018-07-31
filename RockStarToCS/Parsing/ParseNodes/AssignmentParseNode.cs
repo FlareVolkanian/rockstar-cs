@@ -79,7 +79,7 @@ namespace RockStarToCS.Parsing.ParseNodes
                 typeOfAssignment = InterpreterVariableType.Numeric;
                 string strValue = "";
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
-                wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Length % 10);
+                wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Replace("'", "").Length % 10);
                 value = decimal.Parse(strValue);
             }
             else
