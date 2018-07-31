@@ -64,6 +64,7 @@
     <Compile Include="Parsing\ParseNodes\OutputParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\ParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\ParseNodeList.cs" />
+    <Compile Include="Parsing\ParseNodes\StringLiteralAssignmentParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\StringParseNode.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\Tokeniser.cs" />

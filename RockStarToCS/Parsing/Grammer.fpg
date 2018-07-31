@@ -21,6 +21,7 @@ stmtlst => stmt => new ParseNodeList(x[0] as ParseNode)
 stmt => ass NL => x[0] as ParseNode
 stmt => io NL => x[0] as ParseNode
 stmt => incdec NL => x[0] as ParseNode
+stmt => psla NL => x[0] as ParseNode
 
 
 //functions
@@ -39,6 +40,9 @@ ass => var IS STR => new AssignmentParseNode(x[1] as Token, new StringParseNode(
 var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false)
 var => PVAR => new VariableParseNode(x[0] as Token, (x[0] as Token).Value, true)
 var => LVAR => new VariableParseNode(x[0] as Token)
+
+//poetic string literal assignment
+psla => var SAYS wrdlst => new StringLiteralAssignmentParseNode(x[1] as Token, x[0] as VariableParseNode, x[2] as ParseNodeList)
 
 //booleans
 bool => TRUE => new BooleanParseNode(x[0] as Token)

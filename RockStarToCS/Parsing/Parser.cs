@@ -157,6 +157,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_stmt_4()
+        {
+            //stmt => psla NL
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = Matches_psla()) != null && (matches[1] = TokenMatches("NL")) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_stmt(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -172,6 +186,11 @@ namespace RockStarToCS.Parsing
             }
             //stmt => incdec NL
             if(RuleIndex != 3 && (matches = Matches_stmt_3()) != null)
+            {
+                return matches;
+            }
+            //stmt => psla NL
+            if(RuleIndex != 4 && (matches = Matches_stmt_4()) != null)
             {
                 return matches;
             }
@@ -364,6 +383,20 @@ namespace RockStarToCS.Parsing
             {
                 return matches;
             }
+            return null;
+        }
+
+        private ParseNode Matches_psla()
+        {
+            //psla => var SAYS wrdlst
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("SAYS")) != null && (matches[2] = Matches_wrdlst()) != null)
+            {
+                Func<object[], ParseNode> f = x => new StringLiteralAssignmentParseNode(x[1] as Token, x[0] as VariableParseNode, x[2] as ParseNodeList);
+                return f(matches);
+            }
+            TokenIndex = ti;
             return null;
         }
 
