@@ -54,6 +54,7 @@ namespace RockStarToCS.Parsing
 
             //assignment
             defs.Add("put", "PUT", InvalidKeyWordEndings);
+            defs.Add("Put", "PUT", InvalidKeyWordEndings);
             defs.Add("into", "INTO", InvalidKeyWordEndings);
 
             //poetic literals

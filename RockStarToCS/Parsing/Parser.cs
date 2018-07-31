@@ -316,6 +316,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_ass_5()
+        {
+            //ass => PUT mult INTO var
+            int ti = TokenIndex;
+            object[] matches = new object[4];
+            if((matches[0] = TokenMatches("PUT")) != null && (matches[1] = Matches_mult()) != null && (matches[2] = TokenMatches("INTO")) != null && (matches[3] = Matches_var()) != null)
+            {
+                Func<object[], ParseNode> f = x => new PutIntoParseNode(x[0] as Token, x[3] as VariableParseNode, x[1] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_ass(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -336,6 +350,11 @@ namespace RockStarToCS.Parsing
             }
             //ass => var IS STR
             if(RuleIndex != 4 && (matches = Matches_ass_4()) != null)
+            {
+                return matches;
+            }
+            //ass => PUT mult INTO var
+            if(RuleIndex != 5 && (matches = Matches_ass_5()) != null)
             {
                 return matches;
             }

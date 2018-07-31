@@ -24,7 +24,6 @@ stmt => incdec NL => x[0] as ParseNode
 stmt => psla NL => x[0] as ParseNode
 stmt => mult NL => x[0] as ParseNode
 
-
 //functions
 
 //i/o
@@ -36,6 +35,7 @@ ass => var IS NULL => new AssignmentParseNode(x[1] as Token, new NullParseNode(x
 ass => var IS bool => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
 ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
 ass => var IS STR => new AssignmentParseNode(x[1] as Token, x[2] as StringParseNode, x[0] as VariableParseNode)
+ass => PUT mult INTO var => new PutIntoParseNode(x[0] as Token, x[3] as VariableParseNode, x[1] as ParseNode)
 
 //variables
 var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false)
