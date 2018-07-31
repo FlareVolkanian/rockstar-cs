@@ -35,7 +35,21 @@ namespace RockStarToCS.Parsing.ParseNodes
 
         public override InterpreterResult Interpret(InterpreterEnvironment Env)
         {
-            throw new NotImplementedException();
+            if(IsLast)
+            {
+                if(Env.CurrentContext.LastVariable != null)
+                {
+                    InterpreterVariable v = Env.CurrentContext.LastVariable;
+                    return new InterpreterResult() { Type = v.Type, Value = v.Value };
+                }
+                throw new InterpreterException("Invalid use of " + T.Value, T);
+            }
+            if(Env.CurrentContext.VariableExists(Name))
+            {
+                InterpreterVariable v = Env.CurrentContext.GetVariable(Name);
+                return new InterpreterResult() { Value = v.Value, Type = v.Type };
+            }
+            return new InterpreterResult() { Type = InterpreterVariableType.Undefined };
         }
     }
 }

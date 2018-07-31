@@ -171,6 +171,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_stmt_5()
+        {
+            //stmt => mult NL
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("NL")) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_stmt(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -191,6 +205,11 @@ namespace RockStarToCS.Parsing
             }
             //stmt => psla NL
             if(RuleIndex != 4 && (matches = Matches_stmt_4()) != null)
+            {
+                return matches;
+            }
+            //stmt => mult NL
+            if(RuleIndex != 5 && (matches = Matches_stmt_5()) != null)
             {
                 return matches;
             }
@@ -290,7 +309,7 @@ namespace RockStarToCS.Parsing
             object[] matches = new object[3];
             if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("STR")) != null)
             {
-                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, new StringParseNode(x[2] as Token, (x[2] as Token).Value), x[0] as VariableParseNode);
+                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, x[2] as StringParseNode, x[0] as VariableParseNode);
                 return f(matches);
             }
             TokenIndex = ti;
@@ -488,6 +507,61 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_mult_1()
+        {
+            //mult => add MULT mult
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_add()) != null && (matches[1] = TokenMatches("MULT")) != null && (matches[2] = Matches_mult()) != null)
+            {
+                Func<object[], ParseNode> f = x => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_mult(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //mult => add MULT mult
+            if(RuleIndex != 1 && (matches = Matches_mult_1()) != null)
+            {
+                return matches;
+            }
+            //mult => add
+            if(RuleIndex != 2 && (matches = Matches_add()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            return null;
+        }
+
+        private ParseNode Matches_add(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //add => bool
+            if(RuleIndex != 1 && (matches = Matches_bool()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            //add => var
+            if(RuleIndex != 2 && (matches = Matches_var()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            //add => str
+            if(RuleIndex != 3 && (matches = Matches_str()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            return null;
+        }
+
         private ParseNode Matches_wrdlst_1()
         {
             //wrdlst => wrdlst wrdlst
@@ -623,6 +697,20 @@ namespace RockStarToCS.Parsing
             {
                 return matches;
             }
+            return null;
+        }
+
+        private ParseNode Matches_str()
+        {
+            //str => STR
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("STR")) != null)
+            {
+                Func<object[], ParseNode> f = x => new StringParseNode(x[0] as Token, (x[0] as Token).Value);
+                return f(matches);
+            }
+            TokenIndex = ti;
             return null;
         }
 

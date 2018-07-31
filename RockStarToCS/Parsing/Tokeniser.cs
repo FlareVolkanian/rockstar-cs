@@ -72,7 +72,7 @@ namespace RockStarToCS.Parsing
             defs.Add("times", "MULT", InvalidKeyWordEndings);
             defs.Add("of", "MULT", InvalidKeyWordEndings);
             defs.Add("over", "DIV", InvalidKeyWordEndings);
-            defs.Add("by", "DIV", InvalidKeyWordEndings);
+            //defs.Add("by", "DIV", InvalidKeyWordEndings); //looks like this has been removed from the spec
 
             //increment/decrement
             defs.Add("build", "BLD", InvalidKeyWordEndings);

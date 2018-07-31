@@ -22,6 +22,7 @@ stmt => ass NL => x[0] as ParseNode
 stmt => io NL => x[0] as ParseNode
 stmt => incdec NL => x[0] as ParseNode
 stmt => psla NL => x[0] as ParseNode
+stmt => mult NL => x[0] as ParseNode
 
 
 //functions
@@ -34,7 +35,7 @@ io => LSTN var => new InputParseNode(x[0] as Token, x[1] as VariableParseNode)
 ass => var IS NULL => new AssignmentParseNode(x[1] as Token, new NullParseNode(x[2] as Token), x[0] as VariableParseNode)
 ass => var IS bool => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
 ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
-ass => var IS STR => new AssignmentParseNode(x[1] as Token, new StringParseNode(x[2] as Token, (x[2] as Token).Value), x[0] as VariableParseNode)
+ass => var IS STR => new AssignmentParseNode(x[1] as Token, x[2] as StringParseNode, x[0] as VariableParseNode)
 
 //variables
 var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false)
@@ -53,7 +54,11 @@ incdec => BLD var UP => new IncDecParseNode(x[0] as Token, x[1] as VariableParse
 incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, false)
 
 //arithmetic
-
+mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+mult => add => x[0] as ParseNode
+add => bool => x[0] as ParseNode
+add => var => x[0] as ParseNode
+add => str => x[0] as ParseNode
 
 //word lists
 wrdlst => wrdlst wrdlst => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }
@@ -67,3 +72,6 @@ wrd => CVARSP => new WordParseNode(x[0] as Token)
 eline => eline eline => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }
 eline => ELINE => new EmptyLineParseNode(x[0] as Token)
 eline => EOF => new EmptyLineParseNode(x[0] as Token)
+
+//strings
+str => STR => new StringParseNode(x[0] as Token, (x[0] as Token).Value)

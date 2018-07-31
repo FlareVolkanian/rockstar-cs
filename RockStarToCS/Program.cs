@@ -14,7 +14,7 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
-            string test = "Tommy says hey man\nShout it";
+            string test = "Tommy is cool\nJoey is great\nTommy of Joey";
             Tokeniser tok = new Tokeniser();
             List<Token> tokens = tok.Tokenise(test);
             Parser parser = new Parser();
