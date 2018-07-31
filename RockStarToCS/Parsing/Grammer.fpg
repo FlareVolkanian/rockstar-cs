@@ -55,6 +55,7 @@ incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariablePars
 
 //arithmetic
 mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+mult => add DIV mult => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add => x[0] as ParseNode
 add => bool => x[0] as ParseNode
 add => var => x[0] as ParseNode

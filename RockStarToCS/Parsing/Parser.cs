@@ -521,6 +521,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_mult_2()
+        {
+            //mult => add DIV mult
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_add()) != null && (matches[1] = TokenMatches("DIV")) != null && (matches[2] = Matches_mult()) != null)
+            {
+                Func<object[], ParseNode> f = x => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_mult(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -529,8 +543,13 @@ namespace RockStarToCS.Parsing
             {
                 return matches;
             }
+            //mult => add DIV mult
+            if(RuleIndex != 2 && (matches = Matches_mult_2()) != null)
+            {
+                return matches;
+            }
             //mult => add
-            if(RuleIndex != 2 && (matches = Matches_add()) != null)
+            if(RuleIndex != 3 && (matches = Matches_add()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });
