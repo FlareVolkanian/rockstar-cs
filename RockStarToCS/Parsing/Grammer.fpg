@@ -20,7 +20,7 @@ stmtlst => stmt => new ParseNodeList(x[0] as ParseNode)
 //statements
 stmt => ass NL => x[0] as ParseNode
 stmt => io NL => x[0] as ParseNode
-
+stmt => incdec NL => x[0] as ParseNode
 
 
 //functions
@@ -43,6 +43,13 @@ var => LVAR => new VariableParseNode(x[0] as Token)
 //booleans
 bool => TRUE => new BooleanParseNode(x[0] as Token)
 bool => FALSE => new BooleanParseNode(x[0] as Token)
+
+//increment/decrement
+incdec => BLD var UP => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, true)
+incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, false)
+
+//arithmetic
+
 
 //word lists
 wrdlst => wrdlst wrdlst => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }

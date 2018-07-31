@@ -74,6 +74,14 @@ namespace RockStarToCS.Parsing
             defs.Add("over", "DIV", InvalidKeyWordEndings);
             defs.Add("by", "DIV", InvalidKeyWordEndings);
 
+            //increment/decrement
+            defs.Add("build", "BLD", InvalidKeyWordEndings);
+            defs.Add("Build", "BLD", InvalidKeyWordEndings);
+            defs.Add("up", "UP", InvalidKeyWordEndings);
+            defs.Add("knock", "KNK", InvalidKeyWordEndings);
+            defs.Add("Knock", "KNK", InvalidKeyWordEndings);
+            defs.Add("down", "DWN", InvalidKeyWordEndings);
+
             //I/O
             defs.Add("Say", "SAY", InvalidKeyWordEndings);
             defs.Add("Shout", "SAY", InvalidKeyWordEndings);

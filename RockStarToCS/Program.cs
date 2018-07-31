@@ -14,7 +14,7 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
-            string test = "Tommy's a lean mean wrecking machine\nShout Tommy";
+            string test = "Tommy's a lean mean wrecking machine\nShout it\nBuild him up\nShout it\nKnock him down\nShout it";
             Tokeniser tok = new Tokeniser();
             List<Token> tokens = tok.Tokenise(test);
             Parser parser = new Parser();
@@ -31,6 +31,10 @@ namespace RockStarToCS
 
                 InterpreterEnvironment env = new InterpreterEnvironment();
                 root.Interpret(env);
+            }
+            else
+            {
+                Console.WriteLine("Syntax error on line: " + parser.HighestLine);
             }
             Console.ReadKey();
         }

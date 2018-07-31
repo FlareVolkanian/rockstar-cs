@@ -143,6 +143,20 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_stmt_3()
+        {
+            //stmt => incdec NL
+            int ti = TokenIndex;
+            object[] matches = new object[2];
+            if((matches[0] = Matches_incdec()) != null && (matches[1] = TokenMatches("NL")) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_stmt(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -153,6 +167,11 @@ namespace RockStarToCS.Parsing
             }
             //stmt => io NL
             if(RuleIndex != 2 && (matches = Matches_stmt_2()) != null)
+            {
+                return matches;
+            }
+            //stmt => incdec NL
+            if(RuleIndex != 3 && (matches = Matches_stmt_3()) != null)
             {
                 return matches;
             }
@@ -386,6 +405,50 @@ namespace RockStarToCS.Parsing
             }
             //bool => FALSE
             if(RuleIndex != 2 && (matches = Matches_bool_2()) != null)
+            {
+                return matches;
+            }
+            return null;
+        }
+
+        private ParseNode Matches_incdec_1()
+        {
+            //incdec => BLD var UP
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = TokenMatches("BLD")) != null && (matches[1] = Matches_var()) != null && (matches[2] = TokenMatches("UP")) != null)
+            {
+                Func<object[], ParseNode> f = x => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, true);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_incdec_2()
+        {
+            //incdec => KNK var DWN
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = TokenMatches("KNK")) != null && (matches[1] = Matches_var()) != null && (matches[2] = TokenMatches("DWN")) != null)
+            {
+                Func<object[], ParseNode> f = x => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, false);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_incdec(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //incdec => BLD var UP
+            if(RuleIndex != 1 && (matches = Matches_incdec_1()) != null)
+            {
+                return matches;
+            }
+            //incdec => KNK var DWN
+            if(RuleIndex != 2 && (matches = Matches_incdec_2()) != null)
             {
                 return matches;
             }

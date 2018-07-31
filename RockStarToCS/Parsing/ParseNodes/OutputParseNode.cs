@@ -59,17 +59,17 @@ namespace RockStarToCS.Parsing.ParseNodes
                 }
                 else
                 {
-                    Console.Write("mysterious");
+                    Console.WriteLine("mysterious");
                     return new InterpreterResult();
                 }
                 if(variable.Type == InterpreterVariableType.Null)
                 {
-                    Console.Write("null");
+                    Console.WriteLine("null");
                     return new InterpreterResult();
                 }
                 if(variable.Type == InterpreterVariableType.Undefined)
                 {
-                    Console.Write("mysterious");
+                    Console.WriteLine("mysterious");
                     return new InterpreterResult();
                 }
                 value = variable.Value;
@@ -79,18 +79,18 @@ namespace RockStarToCS.Parsing.ParseNodes
                 InterpreterResult result = ToSay.Interpret(Env);
                 if(result.Type == InterpreterVariableType.Null)
                 {
-                    Console.Write("null");
+                    Console.WriteLine("null");
                 }
                 else if(result.Type == InterpreterVariableType.Undefined)
                 {
-                    Console.Write("mysterious");
+                    Console.WriteLine("mysterious");
                 }
                 else
                 {
                     value = result.Value;
                 }
             }
-            Console.Write(value);
+            Console.WriteLine(value);
             return new InterpreterResult();
         }
     }
