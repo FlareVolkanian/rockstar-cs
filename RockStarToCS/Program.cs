@@ -4,6 +4,7 @@ using RockStarToCS.Parsing;
 using RockStarToCS.Parsing.ParseNodes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,19 @@ namespace RockStarToCS
     {
         static void Main(string[] args)
         {
-            string test = "Tommy is cool\nJoey is great\nPut Tommy over Joey into my heart\nWhisper it";
+            if(args.Length != 1)
+            {
+                Console.WriteLine("rockstart.exe rockstarfile");
+                Environment.Exit(1);
+            }
+            if(!File.Exists(args[0]))
+            {
+                Console.WriteLine("Unable to open file");
+                Environment.Exit(1);
+            }
+            string text = File.ReadAllText(args[0]);
             Tokeniser tok = new Tokeniser();
-            List<Token> tokens = tok.Tokenise(test);
+            List<Token> tokens = tok.Tokenise(text);
             Parser parser = new Parser();
             ParseNode root = parser.Parse(tokens);
 
