@@ -40,14 +40,40 @@ namespace RockStarToCS
                 result.GeneratedCS.ForEach(cs => code += cs.CS + "\n");
                 Console.WriteLine(code);*/
 
-                InterpreterEnvironment env = new InterpreterEnvironment();
-                root.Interpret(env);
+                try
+                {
+                    InterpreterEnvironment env = new InterpreterEnvironment();
+                    root.Interpret(env);
+                }
+                catch(InterpreterException ie)
+                {
+                    Console.WriteLine("Error: " + ie.Message + " on line: " + ie.T.LineNumber);
+#if DEBUG
+                    Console.ReadLine();
+#endif
+                    Environment.Exit(1);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Error: The interpreter encountered a problem: " + ex.Message);
+#if DEBUG
+                    Console.WriteLine(ex.StackTrace);
+                    Console.ReadLine();
+#endif
+                    Environment.Exit(1);
+                }
             }
             else
             {
                 Console.WriteLine("Syntax error on line: " + parser.HighestLine);
+#if DEBUG
+                Console.ReadLine();
+#endif
+                Environment.Exit(1);
             }
+#if DEBUG
             Console.ReadKey();
+#endif
         }
     }
 }
