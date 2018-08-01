@@ -10,12 +10,13 @@ namespace RockStarToCS.Parsing
     class Tokeniser
     {
         private List<TokenDefinition> TokDefs;
-        private static string WhiteSpace = " \r\t";
+        public static string WhiteSpace = " \r\t";
         private int line;
 
-        private string InvalidKeyWordEndings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV";
-        private string LowerCase = "abcdefghijklmnopqrstuvwxyz";
-        private string NumberChars = "0123456789";
+        private static string InvalidKeyWordEndings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV";
+        private static string LowerCase = "abcdefghijklmnopqrstuvwxyz";
+        private static string WordCharacters = LowerCase + "'!?'";
+        private static string NumberChars = "0123456789";
 
         public Tokeniser()
         {
@@ -24,91 +25,90 @@ namespace RockStarToCS.Parsing
             //most of the tokens are defined here, a couple such as EOF and ELINE (empty line) are defined in the Tokenise method
 
             //common variable specifiers
-            defs.Add("a", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("A", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("an", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("An", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("the", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("The", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("my", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("My", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("your", "CVARSP", InvalidKeyWordEndings);
-            defs.Add("Your", "CVARSP", InvalidKeyWordEndings);
+            defs.Add("a", "CVARSP", true);
+            defs.Add("A", "CVARSP", true);
+            defs.Add("an", "CVARSP", true);
+            defs.Add("An", "CVARSP", true);
+            defs.Add("the", "CVARSP", true);
+            defs.Add("The", "CVARSP", true);
+            defs.Add("my", "CVARSP", true);
+            defs.Add("My", "CVARSP", true);
+            defs.Add("your", "CVARSP", true);
+            defs.Add("Your", "CVARSP", true);
 
             //last variable/pronouns
-            defs.Add("it", "LVAR", InvalidKeyWordEndings);
-            defs.Add("he", "LVAR", InvalidKeyWordEndings);
-            defs.Add("she", "LVAR", InvalidKeyWordEndings);
-            defs.Add("him", "LVAR", InvalidKeyWordEndings);
-            defs.Add("her", "LVAR", InvalidKeyWordEndings);
-            defs.Add("them", "LVAR", InvalidKeyWordEndings);
-            defs.Add("they", "LVAR", InvalidKeyWordEndings);
-            defs.Add("ze", "LVAR", InvalidKeyWordEndings);
-            defs.Add("hir", "LVAR", InvalidKeyWordEndings);
-            defs.Add("zie", "LVAR", InvalidKeyWordEndings);
-            defs.Add("zir", "LVAR", InvalidKeyWordEndings);
-            defs.Add("xe", "LVAR", InvalidKeyWordEndings);
-            defs.Add("xem", "LVAR", InvalidKeyWordEndings);
-            defs.Add("ve", "LVAR", InvalidKeyWordEndings);
-            defs.Add("ver", "LVAR", InvalidKeyWordEndings);
+            defs.Add("it", "LVAR", true);
+            defs.Add("he", "LVAR", true);
+            defs.Add("she", "LVAR", true);
+            defs.Add("him", "LVAR", true);
+            defs.Add("her", "LVAR", true);
+            defs.Add("them", "LVAR", true);
+            defs.Add("they", "LVAR", true);
+            defs.Add("ze", "LVAR", true);
+            defs.Add("hir", "LVAR", true);
+            defs.Add("zie", "LVAR", true);
+            defs.Add("zir", "LVAR", true);
+            defs.Add("xe", "LVAR", true);
+            defs.Add("xem", "LVAR", true);
+            defs.Add("ve", "LVAR", true);
+            defs.Add("ver", "LVAR", true);
 
             //assignment
-            defs.Add("put", "PUT", InvalidKeyWordEndings);
-            defs.Add("Put", "PUT", InvalidKeyWordEndings);
-            defs.Add("into", "INTO", InvalidKeyWordEndings);
+            defs.Add("put", "PUT", true);
+            defs.Add("Put", "PUT", true);
+            defs.Add("into", "INTO", true);
 
             //poetic literals
             //poetic type literals
-            defs.Add("is", "IS", InvalidKeyWordEndings);
-            defs.Add("was", "IS", InvalidKeyWordEndings);
-            defs.Add("were", "IS", InvalidKeyWordEndings);
+            defs.Add("is", "IS", true);
+            defs.Add("was", "IS", true);
+            defs.Add("were", "IS", true);
             //poetic string literals
-            defs.Add("says", "SAYS", InvalidKeyWordEndings);
+            defs.Add("says", "SAYS", true);
 
             //arithmetic
-            defs.Add("plus", "ADD", InvalidKeyWordEndings);
-            defs.Add("with", "ADD", InvalidKeyWordEndings);
-            defs.Add("minus", "SUB", InvalidKeyWordEndings);
-            defs.Add("without", "SUB", InvalidKeyWordEndings);
-            defs.Add("times", "MULT", InvalidKeyWordEndings);
-            defs.Add("of", "MULT", InvalidKeyWordEndings);
-            defs.Add("over", "DIV", InvalidKeyWordEndings);
-            //defs.Add("by", "DIV", InvalidKeyWordEndings); //looks like this has been removed from the spec
+            defs.Add("plus", "ADD", true);
+            defs.Add("with", "ADD", true);
+            defs.Add("minus", "SUB", true);
+            defs.Add("without", "SUB", true);
+            defs.Add("times", "MULT", true);
+            defs.Add("of", "MULT", true);
+            defs.Add("over", "DIV", true);
 
             //increment/decrement
-            defs.Add("build", "BLD", InvalidKeyWordEndings);
-            defs.Add("Build", "BLD", InvalidKeyWordEndings);
-            defs.Add("up", "UP", InvalidKeyWordEndings);
-            defs.Add("knock", "KNK", InvalidKeyWordEndings);
-            defs.Add("Knock", "KNK", InvalidKeyWordEndings);
-            defs.Add("down", "DWN", InvalidKeyWordEndings);
+            defs.Add("build", "BLD", true);
+            defs.Add("Build", "BLD", true);
+            defs.Add("up", "UP", true);
+            defs.Add("knock", "KNK", true);
+            defs.Add("Knock", "KNK", true);
+            defs.Add("down", "DWN", true);
 
             //I/O
-            defs.Add("Say", "SAY", InvalidKeyWordEndings);
-            defs.Add("Shout", "SAY", InvalidKeyWordEndings);
-            defs.Add("Whisper", "SAY", InvalidKeyWordEndings);
-            defs.Add("Listen to", "LSTN", InvalidKeyWordEndings);
-            defs.Add("Listen", "LSTN", InvalidKeyWordEndings);
+            defs.Add("Say", "SAY", true);
+            defs.Add("Shout", "SAY", true);
+            defs.Add("Whisper", "SAY", true);
+            defs.Add("Listen to", "LSTN", true);
+            defs.Add("Listen", "LSTN", true);
 
             //types
             //undefined
-            defs.Add("mysterious", "UNDEF", InvalidKeyWordEndings);
+            defs.Add("mysterious", "UNDEF", true);
             //null
-            defs.Add("nothing", "NULL", InvalidKeyWordEndings);
-            defs.Add("nowhere", "NULL", InvalidKeyWordEndings);
-            defs.Add("nobody", "NULL", InvalidKeyWordEndings);
-            defs.Add("null", "NULL", InvalidKeyWordEndings);
-            defs.Add("empty", "NULL", InvalidKeyWordEndings);
-            defs.Add("gone", "NULL", InvalidKeyWordEndings);
+            defs.Add("nothing", "NULL", true);
+            defs.Add("nowhere", "NULL", true);
+            defs.Add("nobody", "NULL", true);
+            defs.Add("null", "NULL", true);
+            defs.Add("empty", "NULL", true);
+            defs.Add("gone", "NULL", true);
             //boolean
-            defs.Add("true", "TRUE", InvalidKeyWordEndings);
-            defs.Add("right", "TRUE", InvalidKeyWordEndings);
-            defs.Add("yes", "TRUE", InvalidKeyWordEndings);
-            defs.Add("ok", "TRUE", InvalidKeyWordEndings);
-            defs.Add("false", "FALSE", InvalidKeyWordEndings);
-            defs.Add("wrong", "FALSE", InvalidKeyWordEndings);
-            defs.Add("no", "FALSE", InvalidKeyWordEndings);
-            defs.Add("lies", "FALSE", InvalidKeyWordEndings);
+            defs.Add("true", "TRUE", true);
+            defs.Add("right", "TRUE", true);
+            defs.Add("yes", "TRUE", true);
+            defs.Add("ok", "TRUE", true);
+            defs.Add("false", "FALSE", true);
+            defs.Add("wrong", "FALSE", true);
+            defs.Add("no", "FALSE", true);
+            defs.Add("lies", "FALSE", true);
             //numeric litterals
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
@@ -215,17 +215,11 @@ namespace RockStarToCS.Parsing
             //words
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
-                if(TokenDefinition.InSet(Text, StrPtr, LowerCase) || TokenDefinition.Matches(Text, StrPtr, "'"))
+                if(TokenDefinition.InSet(Text, StrPtr, WordCharacters))
                 {
                     string text = "";
-                    while(TokenDefinition.InSet(Text, StrPtr, LowerCase) || TokenDefinition.Matches(Text, StrPtr, "'"))
+                    while(TokenDefinition.InSet(Text, StrPtr, WordCharacters))
                     {
-                        //skip over apostrophies
-                        if(TokenDefinition.Matches(Text, StrPtr, "'"))
-                        {
-                            StrPtr++;
-                            continue;
-                        }
                         text += Text[StrPtr];
                         StrPtr++;
                     }
@@ -377,7 +371,7 @@ namespace RockStarToCS.Parsing
             return true;
         }
 
-        private static bool Matches(string Text, int StrPtr, string TextToMatch, string InvalidEndings)
+        public static bool Matches(string Text, int StrPtr, string TextToMatch, string InvalidEndings)
         {
             if (StrPtr >= Text.Length)
             {
@@ -395,6 +389,31 @@ namespace RockStarToCS.Parsing
                 return false;
             }
             return true;
+        }
+
+        public static bool Matches(string Text, int StrPtr, string TextToMatch, bool EndsWithWhiteSpace)
+        {
+            if(StrPtr >= Text.Length)
+            {
+                return false;
+            }
+            for(int i = 0;i < TextToMatch.Length && StrPtr + i < Text.Length;++i)
+            {
+                if(Text[StrPtr + i] != TextToMatch[i])
+                {
+                    return false;
+                }
+            }
+            //match whitespace or end of Text
+            if(EndsWithWhiteSpace && Text.Length > StrPtr + TextToMatch.Length && (Tokeniser.WhiteSpace.Contains(Text[StrPtr + TextToMatch.Length]) || Text.Length == StrPtr + TextToMatch.Length))
+            {
+                return true;
+            }
+            else if(!EndsWithWhiteSpace)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static bool InSet(string Text, int StrPtr, char[] Chars)
@@ -430,6 +449,14 @@ namespace RockStarToCS.Parsing
         private string TextToMatch { get; set; }
         private string TokenName { get; set; }
         private string InvalidEndings { get; set; }
+        private bool EndsWithWhiteSpace { get; set; }
+
+        public ConstantDefinition(string TextToMatch, string TokenName, bool EndsWithWhiteSpace)
+        {
+            this.TextToMatch = TextToMatch;
+            this.TokenName = TokenName;
+            this.EndsWithWhiteSpace = EndsWithWhiteSpace;
+        }
 
         public ConstantDefinition(string TextToMatch, string TokenName, string InvalidEndings)
         {
@@ -447,16 +474,26 @@ namespace RockStarToCS.Parsing
 
         public TokenResult Match(string Text, int StrPtr)
         {
-            if (TokenDefinition.Matches(Text, StrPtr, TextToMatch))
+            if (!string.IsNullOrEmpty(InvalidEndings))
             {
-                if (!string.IsNullOrEmpty(InvalidEndings))
+                if(TokenDefinition.Matches(Text, StrPtr, TextToMatch, InvalidEndings))
                 {
-                    if (InSet(Text, StrPtr + TextToMatch.Length, InvalidEndings))
-                    {
-                        return null;
-                    }
+                    return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, TextToMatch) };
                 }
-                return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, TextToMatch) };
+            }
+            else if (EndsWithWhiteSpace)
+            {
+                if (TokenDefinition.Matches(Text, StrPtr, TextToMatch, true))
+                {
+                    return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, TextToMatch) };
+                }
+            }
+            else
+            {
+                if (TokenDefinition.Matches(Text, StrPtr, TextToMatch))
+                {
+                    return new TokenResult() { NewStrPtr = StrPtr + TextToMatch.Length, T = new Token(TokenName, TextToMatch) };
+                }
             }
             return null;
         }
@@ -498,6 +535,11 @@ namespace RockStarToCS.Parsing
         public void Add(string TextToMatch, string TokenName, string InvalidEndings)
         {
             Add(new ConstantDefinition(TextToMatch, TokenName, InvalidEndings));
+        }
+
+        public void Add(string TextToMatch, string TokenName, bool EndsWithWhiteSpace)
+        {
+            Add(new ConstantDefinition(TextToMatch, TokenName, EndsWithWhiteSpace));
         }
 
         public void Add(string TextToMatch, string TokenName)
