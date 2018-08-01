@@ -59,9 +59,13 @@ incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariablePars
 
 //arithmetic
 arth => comp => x[0] as ParseNode
-comp => mult IS NOT comp => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode)
-comp => mult AINT comp => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+comp => mult IS NOT comp => new InvertComparisonParseNode(x[1] as Token, new EqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode))
+comp => mult AINT comp => new InvertComparisonParseNode(x[1] as Token, new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode))
 comp => mult IS comp => new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+comp => mult IS GT THAN comp => new GtParseNode(x[1] as Token, x[0] as ParseNode, x[4] as ParseNode)
+comp => mult IS AS LTEQ AS comp => new InvertComparisonParseNode(x[0] as Token, new GtParseNode(x[1] as Token, x[0] as ParseNode, x[5] as ParseNode))
+comp => mult IS LT THAN comp => new LtParseNode(x[1] as Token, x[0] as ParseNode, x[4] as ParseNode)
+comp => mult IS AS GTEQ AS comp => new InvertComparisonParseNode(x[0] as Token, new LtParseNode(x[1] as Token, x[0] as ParseNode, x[5] as ParseNode))
 comp => mult => x[0] as ParseNode
 mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add DIV mult => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)

@@ -8,15 +8,13 @@ using RockStarToCS.Interpreter;
 
 namespace RockStarToCS.Parsing.ParseNodes
 {
-    class NeqParseNode : ParseNode
+    class InvertComparisonParseNode : ParseNode
     {
-        public ParseNode LHS { get; set; }
-        public ParseNode RHS { get; set; }
+        public ParseNode Comparison { get; set; }
 
-        public NeqParseNode(Token T, ParseNode LHS, ParseNode RHS) : base(T)
+        public InvertComparisonParseNode(Token T, ParseNode Comparison) : base(T)
         {
-            this.LHS = LHS;
-            this.RHS = RHS;
+            this.Comparison = Comparison;
         }
 
         public override CSResult BuildToCS(BuildEnvironment Env)
@@ -26,8 +24,8 @@ namespace RockStarToCS.Parsing.ParseNodes
 
         public override InterpreterResult Interpret(InterpreterEnvironment Env)
         {
-            InterpreterResult eqResult = EqParseNode.InterpretBoolResult(LHS, RHS, Env);
-            if((eqResult.Value as bool?).Value)
+            InterpreterResult comparisonResult = Comparison.Interpret(Env);
+            if((comparisonResult.Value as bool?).Value)
             {
                 return new InterpreterResult() { Value = false, Type = InterpreterVariableType.Boolean };
             }

@@ -591,7 +591,7 @@ namespace RockStarToCS.Parsing
             object[] matches = new object[4];
             if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("NOT")) != null && (matches[3] = Matches_comp()) != null)
             {
-                Func<object[], ParseNode> f = x => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode);
+                Func<object[], ParseNode> f = x => new InvertComparisonParseNode(x[1] as Token, new EqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode));
                 return f(matches);
             }
             TokenIndex = ti;
@@ -605,7 +605,7 @@ namespace RockStarToCS.Parsing
             object[] matches = new object[3];
             if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("AINT")) != null && (matches[2] = Matches_comp()) != null)
             {
-                Func<object[], ParseNode> f = x => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                Func<object[], ParseNode> f = x => new InvertComparisonParseNode(x[1] as Token, new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode));
                 return f(matches);
             }
             TokenIndex = ti;
@@ -620,6 +620,62 @@ namespace RockStarToCS.Parsing
             if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = Matches_comp()) != null)
             {
                 Func<object[], ParseNode> f = x => new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_4()
+        {
+            //comp => mult IS GT THAN comp
+            int ti = TokenIndex;
+            object[] matches = new object[5];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("GT")) != null && (matches[3] = TokenMatches("THAN")) != null && (matches[4] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new GtParseNode(x[1] as Token, x[0] as ParseNode, x[4] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_5()
+        {
+            //comp => mult IS AS LTEQ AS comp
+            int ti = TokenIndex;
+            object[] matches = new object[6];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("AS")) != null && (matches[3] = TokenMatches("LTEQ")) != null && (matches[4] = TokenMatches("AS")) != null && (matches[5] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new InvertComparisonParseNode(x[0] as Token, new GtParseNode(x[1] as Token, x[0] as ParseNode, x[5] as ParseNode));
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_6()
+        {
+            //comp => mult IS LT THAN comp
+            int ti = TokenIndex;
+            object[] matches = new object[5];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("LT")) != null && (matches[3] = TokenMatches("THAN")) != null && (matches[4] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new LtParseNode(x[1] as Token, x[0] as ParseNode, x[4] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_7()
+        {
+            //comp => mult IS AS GTEQ AS comp
+            int ti = TokenIndex;
+            object[] matches = new object[6];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("AS")) != null && (matches[3] = TokenMatches("GTEQ")) != null && (matches[4] = TokenMatches("AS")) != null && (matches[5] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new InvertComparisonParseNode(x[0] as Token, new LtParseNode(x[1] as Token, x[0] as ParseNode, x[5] as ParseNode));
                 return f(matches);
             }
             TokenIndex = ti;
@@ -644,8 +700,28 @@ namespace RockStarToCS.Parsing
             {
                 return matches;
             }
+            //comp => mult IS GT THAN comp
+            if(RuleIndex != 4 && (matches = Matches_comp_4()) != null)
+            {
+                return matches;
+            }
+            //comp => mult IS AS LTEQ AS comp
+            if(RuleIndex != 5 && (matches = Matches_comp_5()) != null)
+            {
+                return matches;
+            }
+            //comp => mult IS LT THAN comp
+            if(RuleIndex != 6 && (matches = Matches_comp_6()) != null)
+            {
+                return matches;
+            }
+            //comp => mult IS AS GTEQ AS comp
+            if(RuleIndex != 7 && (matches = Matches_comp_7()) != null)
+            {
+                return matches;
+            }
             //comp => mult
-            if(RuleIndex != 4 && (matches = Matches_mult()) != null)
+            if(RuleIndex != 8 && (matches = Matches_mult()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });

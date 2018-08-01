@@ -8,12 +8,12 @@ using RockStarToCS.Interpreter;
 
 namespace RockStarToCS.Parsing.ParseNodes
 {
-    class EqParseNode : ParseNode
+    class LtParseNode : ParseNode
     {
         public ParseNode LHS { get; set; }
         public ParseNode RHS { get; set; }
 
-        public EqParseNode(Token T, ParseNode LHS, ParseNode RHS) : base(T)
+        public LtParseNode(Token T, ParseNode LHS, ParseNode RHS) : base(T)
         {
             this.LHS = LHS;
             this.RHS = RHS;
@@ -32,47 +32,48 @@ namespace RockStarToCS.Parsing.ParseNodes
             InterpreterResult trueResult = new InterpreterResult() { Value = true, Type = InterpreterVariableType.Boolean };
             InterpreterResult falseResult = new InterpreterResult() { Value = false, Type = InterpreterVariableType.Boolean };
 
-            if (lhsResult.Value == null && rhsResult.Value == null)
+            if (rhsResult.Value == null)
+            {
+                return falseResult;
+            }
+
+            if (lhsResult.Type == InterpreterVariableType.NaN || rhsResult.Type == InterpreterVariableType.NaN)
+            {
+                return falseResult;
+            }
+
+            if (rhsResult.Type == InterpreterVariableType.Null)
+            {
+                return falseResult;
+            }
+
+            if (lhsResult.Type == InterpreterVariableType.Null)
             {
                 return trueResult;
             }
 
-            if (lhsResult.Type == InterpreterVariableType.NaN && rhsResult.Type == InterpreterVariableType.NaN)
+            if (lhsResult.Type == InterpreterVariableType.Undefined || rhsResult.Type == InterpreterVariableType.Undefined)
             {
-                return trueResult;
-            }
-
-            if (lhsResult.Type == InterpreterVariableType.Null && rhsResult.Type == InterpreterVariableType.Null)
-            {
-                return trueResult;
-            }
-
-            if (lhsResult.Type == InterpreterVariableType.Undefined && rhsResult.Type == InterpreterVariableType.Undefined)
-            {
-                return trueResult;
+                return falseResult;
             }
 
             if (lhsResult.Type == InterpreterVariableType.Numeric && rhsResult.Type == InterpreterVariableType.Numeric)
             {
-                if ((lhsResult.Value as decimal?).Value == (rhsResult.Value as decimal?).Value)
+                if ((lhsResult.Value as decimal?).Value < (rhsResult.Value as decimal?).Value)
                 {
                     return trueResult;
                 }
                 return falseResult;
             }
 
-            if (lhsResult.Type == InterpreterVariableType.String && lhsResult.Type == InterpreterVariableType.String)
+            if (lhsResult.Type == InterpreterVariableType.String || lhsResult.Type == InterpreterVariableType.String)
             {
-                if (lhsResult.Value as string == rhsResult.Value as string)
-                {
-                    return trueResult;
-                }
                 return falseResult;
             }
 
             decimal? lhsNumVal = InterpreterVariable.GetNumericValueFor(lhsResult.Value);
             decimal? rhsNumVal = InterpreterVariable.GetNumericValueFor(rhsResult.Value);
-            if (lhsNumVal.HasValue && rhsNumVal.HasValue && lhsNumVal.Value == rhsNumVal.Value)
+            if (lhsNumVal.HasValue && rhsNumVal.HasValue && lhsNumVal.Value < rhsNumVal.Value)
             {
                 return trueResult;
             }
