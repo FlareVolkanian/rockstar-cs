@@ -218,10 +218,10 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_io_1()
         {
-            //io => SAY var
+            //io => SAY mult
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = TokenMatches("SAY")) != null && (matches[1] = Matches_var()) != null)
+            if((matches[0] = TokenMatches("SAY")) != null && (matches[1] = Matches_mult()) != null)
             {
                 Func<object[], ParseNode> f = x => new OutputParseNode(x[0] as Token, x[1] as ParseNode);
                 return f(matches);
@@ -247,7 +247,7 @@ namespace RockStarToCS.Parsing
         private ParseNode Matches_io(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //io => SAY var
+            //io => SAY mult
             if(RuleIndex != 1 && (matches = Matches_io_1()) != null)
             {
                 return matches;
@@ -578,6 +578,20 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_add_1()
         {
+            //add => atom ADD add
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_atom()) != null && (matches[1] = TokenMatches("ADD")) != null && (matches[2] = Matches_add()) != null)
+            {
+                Func<object[], ParseNode> f = x => new AdditionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_add_2()
+        {
             //add => atom SUB add
             int ti = TokenIndex;
             object[] matches = new object[3];
@@ -593,13 +607,18 @@ namespace RockStarToCS.Parsing
         private ParseNode Matches_add(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //add => atom SUB add
+            //add => atom ADD add
             if(RuleIndex != 1 && (matches = Matches_add_1()) != null)
             {
                 return matches;
             }
+            //add => atom SUB add
+            if(RuleIndex != 2 && (matches = Matches_add_2()) != null)
+            {
+                return matches;
+            }
             //add => atom
-            if(RuleIndex != 2 && (matches = Matches_atom()) != null)
+            if(RuleIndex != 3 && (matches = Matches_atom()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });

@@ -54,6 +54,7 @@
     <Compile Include="Interpreter\InterpreterException.cs" />
     <Compile Include="Interpreter\InterpreterResult.cs" />
     <Compile Include="Interpreter\InterpreterVariable.cs" />
+    <Compile Include="Parsing\ParseNodes\AdditionParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\AssignmentParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\BooleanParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\DivisionParseNode.cs" />

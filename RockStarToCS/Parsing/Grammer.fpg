@@ -27,7 +27,7 @@ stmt => mult NL => x[0] as ParseNode
 //functions
 
 //i/o
-io => SAY var => new OutputParseNode(x[0] as Token, x[1] as ParseNode)
+io => SAY mult => new OutputParseNode(x[0] as Token, x[1] as ParseNode)
 io => LSTN var => new InputParseNode(x[0] as Token, x[1] as VariableParseNode)
 
 //assignments
@@ -57,6 +57,7 @@ incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariablePars
 mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add DIV mult => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add => x[0] as ParseNode
+add => atom ADD add => new AdditionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 add => atom SUB add => new SubtractParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 add => atom => x[0] as ParseNode
 
