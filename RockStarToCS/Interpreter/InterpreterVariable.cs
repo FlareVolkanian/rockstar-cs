@@ -42,11 +42,11 @@ namespace RockStarToCS.Interpreter
             }
             if(Value == null)
             {
-                return null;
+                return 0;
             }
             if(Value is string)
             {
-                return null;
+                return 0;
             }
             if(Value is bool?)
             {
@@ -63,10 +63,6 @@ namespace RockStarToCS.Interpreter
             if(Value is double?)
             {
                 return (decimal)(Value as double?);
-            }
-            if(Value is string)
-            {
-                return null;
             }
             return null;
         }

@@ -113,6 +113,12 @@ namespace RockStarToCS.Parsing
             defs.Add("Listen to", "LSTN", true);
             defs.Add("Listen", "LSTN", true);
 
+            //loops
+            defs.Add("While", "WHILE", true);
+            defs.Add("while", "WHILE", true);
+            defs.Add("Until", "UNTIL", true);
+            defs.Add("until", "UNTIL", true);
+
             //types
             //undefined
             defs.Add("mysterious", "UNDEF", true);
@@ -281,6 +287,7 @@ namespace RockStarToCS.Parsing
                     {
                         StrPtr++;
                         line++;
+                        tokens.Add(new Token("NL", "NL"));
                         tokens.Add(new Token("ELINE", "ELINE"));
                         continue;
                     }

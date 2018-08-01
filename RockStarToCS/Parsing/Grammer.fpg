@@ -12,6 +12,7 @@ rstarprog => blk => x[0] as ParseNode
 
 //blocks
 blk => stmtlst eline => x[0] as ParseNode
+blk => stmtlst => x[0] as ParseNode
 
 //statement list
 stmtlst => stmtlst stmtlst => { var lst =x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }
@@ -23,8 +24,12 @@ stmt => io NL => x[0] as ParseNode
 stmt => incdec NL => x[0] as ParseNode
 stmt => psla NL => x[0] as ParseNode
 stmt => arth NL => x[0] as ParseNode
+stmt => loop => x[0] as ParseNode
 
 //functions
+
+//loops
+loop => WHILE arth NL blk => new WhileParseNode(x[0] as Token, x[1] as ParseNode, x[3] as ParseNode)
 
 //i/o
 io => SAY arth => new OutputParseNode(x[0] as Token, x[1] as ParseNode)
@@ -118,9 +123,10 @@ wrd => LTEQ => new WordParseNode(x[0] as Token)
 
 //empty line
 //can match to a single empty line or many
-eline => eline eline => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }
+eline => eline eline => x[0] as ParseNode
 eline => ELINE => new EmptyLineParseNode(x[0] as Token)
 eline => EOF => new EmptyLineParseNode(x[0] as Token)
+eline => NL => new EmptyLineParseNode(x[0] as Token)
 
 //strings
 str => STR => new StringParseNode(x[0] as Token, (x[0] as Token).Value)
