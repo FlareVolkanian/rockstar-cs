@@ -31,13 +31,13 @@ namespace RockStarToCS.Parsing.ParseNodes
             if (lhsResult.Type == InterpreterVariableType.Undefined || rhsResult.Type == InterpreterVariableType.Undefined ||
                 lhsResult.Value == null || rhsResult.Value == null)
             {
-                throw new InterpreterException("Unable to multiple mysterious", T);
+                throw new InterpreterException("Unable to divide mysterious", T);
             }
             decimal? lhs = InterpreterVariable.GetNumericValueFor(lhsResult.Value);
             decimal? rhs = InterpreterVariable.GetNumericValueFor(rhsResult.Value);
             if (!lhs.HasValue || !rhs.HasValue)
             {
-                throw new InterpreterException("Unable to multiple mysterious", T);
+                throw new InterpreterException("Unable to divide mysterious", T);
             }
             if(rhs.Value == 0)
             {

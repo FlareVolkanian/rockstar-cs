@@ -17,7 +17,7 @@ namespace RockStarToCS
         {
             if(args.Length != 1)
             {
-                Console.WriteLine("rockstart.exe rockstarfile");
+                Console.WriteLine("usage: rockstart.exe rockstarfile");
                 Environment.Exit(1);
             }
             if(!File.Exists(args[0]))

@@ -57,9 +57,13 @@ incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariablePars
 mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add DIV mult => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add => x[0] as ParseNode
-add => bool => x[0] as ParseNode
-add => var => x[0] as ParseNode
-add => str => x[0] as ParseNode
+add => atom SUB add => new SubtractParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+add => atom => x[0] as ParseNode
+
+//atoms
+atom => bool => x[0] as ParseNode
+atom => var => x[0] as ParseNode
+atom => str => x[0] as ParseNode
 
 //word lists
 wrdlst => wrdlst wrdlst => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }

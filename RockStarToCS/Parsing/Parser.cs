@@ -576,22 +576,53 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_add_1()
+        {
+            //add => atom SUB add
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_atom()) != null && (matches[1] = TokenMatches("SUB")) != null && (matches[2] = Matches_add()) != null)
+            {
+                Func<object[], ParseNode> f = x => new SubtractParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_add(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //add => bool
+            //add => atom SUB add
+            if(RuleIndex != 1 && (matches = Matches_add_1()) != null)
+            {
+                return matches;
+            }
+            //add => atom
+            if(RuleIndex != 2 && (matches = Matches_atom()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            return null;
+        }
+
+        private ParseNode Matches_atom(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //atom => bool
             if(RuleIndex != 1 && (matches = Matches_bool()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });
             }
-            //add => var
+            //atom => var
             if(RuleIndex != 2 && (matches = Matches_var()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });
             }
-            //add => str
+            //atom => str
             if(RuleIndex != 3 && (matches = Matches_str()) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;

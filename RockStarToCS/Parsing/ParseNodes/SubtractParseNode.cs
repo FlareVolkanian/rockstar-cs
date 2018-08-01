@@ -8,12 +8,12 @@ using RockStarToCS.Interpreter;
 
 namespace RockStarToCS.Parsing.ParseNodes
 {
-    class MultiplyParseNode : ParseNode
+    class SubtractParseNode : ParseNode
     {
         public ParseNode LHS { get; set; }
         public ParseNode RHS { get; set; }
 
-        public MultiplyParseNode(Token T, ParseNode LHS, ParseNode RHS) : base(T)
+        public SubtractParseNode(Token T, ParseNode LHS, ParseNode RHS) : base(T)
         {
             this.LHS = LHS;
             this.RHS = RHS;
@@ -28,18 +28,18 @@ namespace RockStarToCS.Parsing.ParseNodes
         {
             InterpreterResult lhsResult = LHS.Interpret(Env);
             InterpreterResult rhsResult = RHS.Interpret(Env);
-            if(lhsResult.Type == InterpreterVariableType.Undefined || rhsResult.Type == InterpreterVariableType.Undefined ||
+            if (lhsResult.Type == InterpreterVariableType.Undefined || rhsResult.Type == InterpreterVariableType.Undefined ||
                 lhsResult.Value == null || rhsResult.Value == null)
             {
-                throw new InterpreterException("Unable to multiply mysterious", T);
+                throw new InterpreterException("Unable to subtract mysterious", T);
             }
             decimal? lhs = InterpreterVariable.GetNumericValueFor(lhsResult.Value);
             decimal? rhs = InterpreterVariable.GetNumericValueFor(rhsResult.Value);
-            if(!lhs.HasValue || !rhs.HasValue)
+            if (!lhs.HasValue || !rhs.HasValue)
             {
-                throw new InterpreterException("Unable to multiply mysterious", T);
+                throw new InterpreterException("Unable to subtract mysterious", T);
             }
-            return new InterpreterResult() { Type = InterpreterVariableType.Numeric, Value = lhs.Value * rhs.Value };
+            return new InterpreterResult() { Type = InterpreterVariableType.Numeric, Value = lhs.Value - rhs.Value };
         }
     }
 }
