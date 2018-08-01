@@ -57,10 +57,13 @@
     <Compile Include="Parsing\ParseNodes\AdditionParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\AssignmentParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\BooleanParseNode.cs" />
+    <Compile Include="Parsing\ParseNodes\EqParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\DivisionParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\EmptyLineParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\IncDecParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\InputParseNode.cs" />
+    <Compile Include="Parsing\ParseNodes\NeqParseNode.cs" />
+    <Compile Include="Parsing\ParseNodes\TokenParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\MultiplyParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\NullParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\NumberParseNode.cs" />

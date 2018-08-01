@@ -15,7 +15,7 @@ namespace RockStarToCS.Parsing
 
         private static string InvalidKeyWordEndings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV";
         private static string LowerCase = "abcdefghijklmnopqrstuvwxyz";
-        private static string WordCharacters = LowerCase + "'!?'";
+        private static string WordCharacters = LowerCase + "'!?',;:@#$%^&*";
         private static string NumberChars = "0123456789";
 
         public Tokeniser()
@@ -61,8 +61,8 @@ namespace RockStarToCS.Parsing
             //poetic literals
             //poetic type literals
             defs.Add("is", "IS", true);
-            defs.Add("was", "IS", true);
-            defs.Add("were", "IS", true);
+            defs.Add("was", "WAS", true);
+            defs.Add("were", "WAS", true);
             //poetic string literals
             defs.Add("says", "SAYS", true);
 
@@ -74,6 +74,29 @@ namespace RockStarToCS.Parsing
             defs.Add("times", "MULT", true);
             defs.Add("of", "MULT", true);
             defs.Add("over", "DIV", true);
+
+            //comparison
+            defs.Add("not", "NOT", true);
+            defs.Add("ain't", "AINT", true);
+            defs.Add("aint", "AINT", true);
+            defs.Add("than", "THAN", true);
+            defs.Add("higher", "GT", true);
+            defs.Add("greater", "GT", true);
+            defs.Add("bigger", "GT", true);
+            defs.Add("stronger", "GT", true);
+            defs.Add("lower", "LT", true);
+            defs.Add("less", "LT", true);
+            defs.Add("smaller", "LT", true);
+            defs.Add("weaker", "LT", true);
+            defs.Add("as", "AS", true);
+            defs.Add("high", "GTEQ", true);
+            defs.Add("great", "GTEQ", true);
+            defs.Add("big", "GTEQ", true);
+            defs.Add("strong", "GTEQ", true);
+            defs.Add("low", "LTEQ", true);
+            defs.Add("little", "LTEQ", true);
+            defs.Add("small", "LTEQ", true);
+            defs.Add("weak", "LTEQ", true);
 
             //increment/decrement
             defs.Add("build", "BLD", true);
@@ -213,6 +236,7 @@ namespace RockStarToCS.Parsing
             }));
 
             //words
+            defs.Add(".", "WORD");
             defs.Add(new MatchingTokenDefinition((Text, StrPtr) =>
             {
                 if(TokenDefinition.InSet(Text, StrPtr, WordCharacters))
@@ -405,7 +429,7 @@ namespace RockStarToCS.Parsing
                 }
             }
             //match whitespace or end of Text
-            if(EndsWithWhiteSpace && Text.Length > StrPtr + TextToMatch.Length && (Tokeniser.WhiteSpace.Contains(Text[StrPtr + TextToMatch.Length]) || Text.Length == StrPtr + TextToMatch.Length))
+            if(EndsWithWhiteSpace && ((Text.Length > StrPtr + TextToMatch.Length && (Tokeniser.WhiteSpace + "\n").Contains(Text[StrPtr + TextToMatch.Length])) || Text.Length == StrPtr + TextToMatch.Length))
             {
                 return true;
             }

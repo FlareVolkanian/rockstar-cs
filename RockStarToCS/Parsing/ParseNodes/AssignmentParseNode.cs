@@ -10,6 +10,8 @@ namespace RockStarToCS.Parsing.ParseNodes
 {
     class AssignmentParseNode : ParseNode
     {
+        public static string CharactersToIgnore = "'!?',;:@#$%^&*";
+
         public ParseNode Value { get; set; }
         public VariableParseNode Variable { get; set; }
         public AssignmentParseNode(Token T, ParseNode Value, VariableParseNode Variable) : base(T)
@@ -79,8 +81,34 @@ namespace RockStarToCS.Parsing.ParseNodes
                 typeOfAssignment = InterpreterVariableType.Numeric;
                 string strValue = "";
                 List<ParseNode> wordNodes = (Value as ParseNodeList).GetNodes();
-                wordNodes.ForEach(pn => strValue += (pn as WordParseNode).Text.Replace("'", "").Length % 10);
-                value = decimal.Parse(strValue);
+                foreach(ParseNode node in wordNodes)
+                {
+                    WordParseNode wordNode = node as WordParseNode;
+
+                    if (wordNode.Text == ".")
+                    {
+                        strValue += ".";
+                        continue;
+                    }
+
+                    string word = "";
+
+                    foreach(char c in wordNode.Text)
+                    {
+                        if(CharactersToIgnore.Contains(c))
+                        {
+                            continue;
+                        }
+                        word += c;
+                    }
+                    strValue += word.Length % 10;
+                }
+                decimal val = 0;
+                if(!decimal.TryParse(strValue, out val))
+                {
+                    throw new InterpreterException("Invalid poetic number literl", T);
+                }
+                value = val;
             }
             else
             {

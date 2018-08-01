@@ -173,10 +173,10 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_stmt_5()
         {
-            //stmt => mult NL
+            //stmt => arth NL
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("NL")) != null)
+            if((matches[0] = Matches_arth()) != null && (matches[1] = TokenMatches("NL")) != null)
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(matches);
@@ -208,7 +208,7 @@ namespace RockStarToCS.Parsing
             {
                 return matches;
             }
-            //stmt => mult NL
+            //stmt => arth NL
             if(RuleIndex != 5 && (matches = Matches_stmt_5()) != null)
             {
                 return matches;
@@ -218,10 +218,10 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_io_1()
         {
-            //io => SAY mult
+            //io => SAY arth
             int ti = TokenIndex;
             object[] matches = new object[2];
-            if((matches[0] = TokenMatches("SAY")) != null && (matches[1] = Matches_mult()) != null)
+            if((matches[0] = TokenMatches("SAY")) != null && (matches[1] = Matches_arth()) != null)
             {
                 Func<object[], ParseNode> f = x => new OutputParseNode(x[0] as Token, x[1] as ParseNode);
                 return f(matches);
@@ -247,7 +247,7 @@ namespace RockStarToCS.Parsing
         private ParseNode Matches_io(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //io => SAY mult
+            //io => SAY arth
             if(RuleIndex != 1 && (matches = Matches_io_1()) != null)
             {
                 return matches;
@@ -262,12 +262,12 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_ass_1()
         {
-            //ass => var IS NULL
+            //ass => var is NULL
             int ti = TokenIndex;
             object[] matches = new object[3];
-            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("NULL")) != null)
+            if((matches[0] = Matches_var()) != null && (matches[1] = Matches_is()) != null && (matches[2] = TokenMatches("NULL")) != null)
             {
-                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, new NullParseNode(x[2] as Token), x[0] as VariableParseNode);
+                Func<object[], ParseNode> f = x => new AssignmentParseNode((x[1] as TokenParseNode).T, new NullParseNode(x[2] as Token), x[0] as VariableParseNode);
                 return f(matches);
             }
             TokenIndex = ti;
@@ -276,12 +276,12 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_ass_2()
         {
-            //ass => var IS bool
+            //ass => var is bool
             int ti = TokenIndex;
             object[] matches = new object[3];
-            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = Matches_bool()) != null)
+            if((matches[0] = Matches_var()) != null && (matches[1] = Matches_is()) != null && (matches[2] = Matches_bool()) != null)
             {
-                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode);
+                Func<object[], ParseNode> f = x => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as ParseNode, x[0] as VariableParseNode);
                 return f(matches);
             }
             TokenIndex = ti;
@@ -290,12 +290,12 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_ass_3()
         {
-            //ass => var IS wrdlst
+            //ass => var is wrdlst
             int ti = TokenIndex;
             object[] matches = new object[3];
-            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = Matches_wrdlst()) != null)
+            if((matches[0] = Matches_var()) != null && (matches[1] = Matches_is()) != null && (matches[2] = Matches_wrdlst()) != null)
             {
-                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode);
+                Func<object[], ParseNode> f = x => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as ParseNode, x[0] as VariableParseNode);
                 return f(matches);
             }
             TokenIndex = ti;
@@ -304,12 +304,12 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_ass_4()
         {
-            //ass => var IS STR
+            //ass => var is STR
             int ti = TokenIndex;
             object[] matches = new object[3];
-            if((matches[0] = Matches_var()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("STR")) != null)
+            if((matches[0] = Matches_var()) != null && (matches[1] = Matches_is()) != null && (matches[2] = TokenMatches("STR")) != null)
             {
-                Func<object[], ParseNode> f = x => new AssignmentParseNode(x[1] as Token, x[2] as StringParseNode, x[0] as VariableParseNode);
+                Func<object[], ParseNode> f = x => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as StringParseNode, x[0] as VariableParseNode);
                 return f(matches);
             }
             TokenIndex = ti;
@@ -318,10 +318,10 @@ namespace RockStarToCS.Parsing
 
         private ParseNode Matches_ass_5()
         {
-            //ass => PUT mult INTO var
+            //ass => PUT arth INTO var
             int ti = TokenIndex;
             object[] matches = new object[4];
-            if((matches[0] = TokenMatches("PUT")) != null && (matches[1] = Matches_mult()) != null && (matches[2] = TokenMatches("INTO")) != null && (matches[3] = Matches_var()) != null)
+            if((matches[0] = TokenMatches("PUT")) != null && (matches[1] = Matches_arth()) != null && (matches[2] = TokenMatches("INTO")) != null && (matches[3] = Matches_var()) != null)
             {
                 Func<object[], ParseNode> f = x => new PutIntoParseNode(x[0] as Token, x[3] as VariableParseNode, x[1] as ParseNode);
                 return f(matches);
@@ -333,28 +333,72 @@ namespace RockStarToCS.Parsing
         private ParseNode Matches_ass(int RuleIndex=0)
         {
             ParseNode matches = null;
-            //ass => var IS NULL
+            //ass => var is NULL
             if(RuleIndex != 1 && (matches = Matches_ass_1()) != null)
             {
                 return matches;
             }
-            //ass => var IS bool
+            //ass => var is bool
             if(RuleIndex != 2 && (matches = Matches_ass_2()) != null)
             {
                 return matches;
             }
-            //ass => var IS wrdlst
+            //ass => var is wrdlst
             if(RuleIndex != 3 && (matches = Matches_ass_3()) != null)
             {
                 return matches;
             }
-            //ass => var IS STR
+            //ass => var is STR
             if(RuleIndex != 4 && (matches = Matches_ass_4()) != null)
             {
                 return matches;
             }
-            //ass => PUT mult INTO var
+            //ass => PUT arth INTO var
             if(RuleIndex != 5 && (matches = Matches_ass_5()) != null)
+            {
+                return matches;
+            }
+            return null;
+        }
+
+        private ParseNode Matches_is_1()
+        {
+            //is => IS
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("IS")) != null)
+            {
+                Func<object[], ParseNode> f = x => new TokenParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_is_2()
+        {
+            //is => WAS
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("WAS")) != null)
+            {
+                Func<object[], ParseNode> f = x => new TokenParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_is(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //is => IS
+            if(RuleIndex != 1 && (matches = Matches_is_1()) != null)
+            {
+                return matches;
+            }
+            //is => WAS
+            if(RuleIndex != 2 && (matches = Matches_is_2()) != null)
             {
                 return matches;
             }
@@ -526,6 +570,89 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_arth()
+        {
+            //arth => comp
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_1()
+        {
+            //comp => mult IS NOT comp
+            int ti = TokenIndex;
+            object[] matches = new object[4];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = TokenMatches("NOT")) != null && (matches[3] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_2()
+        {
+            //comp => mult AINT comp
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("AINT")) != null && (matches[2] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp_3()
+        {
+            //comp => mult IS comp
+            int ti = TokenIndex;
+            object[] matches = new object[3];
+            if((matches[0] = Matches_mult()) != null && (matches[1] = TokenMatches("IS")) != null && (matches[2] = Matches_comp()) != null)
+            {
+                Func<object[], ParseNode> f = x => new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_comp(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //comp => mult IS NOT comp
+            if(RuleIndex != 1 && (matches = Matches_comp_1()) != null)
+            {
+                return matches;
+            }
+            //comp => mult AINT comp
+            if(RuleIndex != 2 && (matches = Matches_comp_2()) != null)
+            {
+                return matches;
+            }
+            //comp => mult IS comp
+            if(RuleIndex != 3 && (matches = Matches_comp_3()) != null)
+            {
+                return matches;
+            }
+            //comp => mult
+            if(RuleIndex != 4 && (matches = Matches_mult()) != null)
+            {
+                Func<object[], ParseNode> f = x => x[0] as ParseNode;
+                return f(new object[]{ matches });
+            }
+            return null;
+        }
+
         private ParseNode Matches_mult_1()
         {
             //mult => add MULT mult
@@ -626,6 +753,34 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_atom_4()
+        {
+            //atom => NULL
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("NULL")) != null)
+            {
+                Func<object[], ParseNode> f = x => new NullParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_atom_5()
+        {
+            //atom => NUM
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("NUM")) != null)
+            {
+                Func<object[], ParseNode> f = x => new NumberParseNode(x[0] as Token, (x[0] as Token).Value);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_atom(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -646,6 +801,16 @@ namespace RockStarToCS.Parsing
             {
                 Func<object[], ParseNode> f = x => x[0] as ParseNode;
                 return f(new object[]{ matches });
+            }
+            //atom => NULL
+            if(RuleIndex != 4 && (matches = Matches_atom_4()) != null)
+            {
+                return matches;
+            }
+            //atom => NUM
+            if(RuleIndex != 5 && (matches = Matches_atom_5()) != null)
+            {
+                return matches;
             }
             return null;
         }
@@ -709,6 +874,398 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
+        private ParseNode Matches_wrd_3()
+        {
+            //wrd => PVAR
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("PVAR")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_4()
+        {
+            //wrd => LVAR
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("LVAR")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_5()
+        {
+            //wrd => PUT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("PUT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_6()
+        {
+            //wrd => INTO
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("INTO")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_7()
+        {
+            //wrd => IS
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("IS")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_8()
+        {
+            //wrd => SAYS
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("SAYS")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_9()
+        {
+            //wrd => ADD
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("ADD")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_10()
+        {
+            //wrd => SUB
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("SUB")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_11()
+        {
+            //wrd => MULT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("MULT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_12()
+        {
+            //wrd => DIV
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("DIV")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_13()
+        {
+            //wrd => BLD
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("BLD")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_14()
+        {
+            //wrd => KNK
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("KNK")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_15()
+        {
+            //wrd => UP
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("UP")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_16()
+        {
+            //wrd => DOWN
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("DOWN")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_17()
+        {
+            //wrd => SAY
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("SAY")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_18()
+        {
+            //wrd => LSTN
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("LSTN")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_19()
+        {
+            //wrd => UNDEF
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("UNDEF")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_20()
+        {
+            //wrd => NULL
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("NULL")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_21()
+        {
+            //wrd => TRUE
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("TRUE")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_22()
+        {
+            //wrd => FALSE
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("FALSE")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_23()
+        {
+            //wrd => NOT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("NOT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_24()
+        {
+            //wrd => AINT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("AINT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_25()
+        {
+            //wrd => THAN
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("THAN")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_26()
+        {
+            //wrd => GT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("GT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_27()
+        {
+            //wrd => LT
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("LT")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_28()
+        {
+            //wrd => AS
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("AS")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_29()
+        {
+            //wrd => GTEQ
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("GTEQ")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_wrd_30()
+        {
+            //wrd => LTEQ
+            int ti = TokenIndex;
+            object[] matches = new object[1];
+            if((matches[0] = TokenMatches("LTEQ")) != null)
+            {
+                Func<object[], ParseNode> f = x => new WordParseNode(x[0] as Token);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
         private ParseNode Matches_wrd(int RuleIndex=0)
         {
             ParseNode matches = null;
@@ -719,6 +1276,146 @@ namespace RockStarToCS.Parsing
             }
             //wrd => CVARSP
             if(RuleIndex != 2 && (matches = Matches_wrd_2()) != null)
+            {
+                return matches;
+            }
+            //wrd => PVAR
+            if(RuleIndex != 3 && (matches = Matches_wrd_3()) != null)
+            {
+                return matches;
+            }
+            //wrd => LVAR
+            if(RuleIndex != 4 && (matches = Matches_wrd_4()) != null)
+            {
+                return matches;
+            }
+            //wrd => PUT
+            if(RuleIndex != 5 && (matches = Matches_wrd_5()) != null)
+            {
+                return matches;
+            }
+            //wrd => INTO
+            if(RuleIndex != 6 && (matches = Matches_wrd_6()) != null)
+            {
+                return matches;
+            }
+            //wrd => IS
+            if(RuleIndex != 7 && (matches = Matches_wrd_7()) != null)
+            {
+                return matches;
+            }
+            //wrd => SAYS
+            if(RuleIndex != 8 && (matches = Matches_wrd_8()) != null)
+            {
+                return matches;
+            }
+            //wrd => ADD
+            if(RuleIndex != 9 && (matches = Matches_wrd_9()) != null)
+            {
+                return matches;
+            }
+            //wrd => SUB
+            if(RuleIndex != 10 && (matches = Matches_wrd_10()) != null)
+            {
+                return matches;
+            }
+            //wrd => MULT
+            if(RuleIndex != 11 && (matches = Matches_wrd_11()) != null)
+            {
+                return matches;
+            }
+            //wrd => DIV
+            if(RuleIndex != 12 && (matches = Matches_wrd_12()) != null)
+            {
+                return matches;
+            }
+            //wrd => BLD
+            if(RuleIndex != 13 && (matches = Matches_wrd_13()) != null)
+            {
+                return matches;
+            }
+            //wrd => KNK
+            if(RuleIndex != 14 && (matches = Matches_wrd_14()) != null)
+            {
+                return matches;
+            }
+            //wrd => UP
+            if(RuleIndex != 15 && (matches = Matches_wrd_15()) != null)
+            {
+                return matches;
+            }
+            //wrd => DOWN
+            if(RuleIndex != 16 && (matches = Matches_wrd_16()) != null)
+            {
+                return matches;
+            }
+            //wrd => SAY
+            if(RuleIndex != 17 && (matches = Matches_wrd_17()) != null)
+            {
+                return matches;
+            }
+            //wrd => LSTN
+            if(RuleIndex != 18 && (matches = Matches_wrd_18()) != null)
+            {
+                return matches;
+            }
+            //wrd => UNDEF
+            if(RuleIndex != 19 && (matches = Matches_wrd_19()) != null)
+            {
+                return matches;
+            }
+            //wrd => NULL
+            if(RuleIndex != 20 && (matches = Matches_wrd_20()) != null)
+            {
+                return matches;
+            }
+            //wrd => TRUE
+            if(RuleIndex != 21 && (matches = Matches_wrd_21()) != null)
+            {
+                return matches;
+            }
+            //wrd => FALSE
+            if(RuleIndex != 22 && (matches = Matches_wrd_22()) != null)
+            {
+                return matches;
+            }
+            //wrd => NOT
+            if(RuleIndex != 23 && (matches = Matches_wrd_23()) != null)
+            {
+                return matches;
+            }
+            //wrd => AINT
+            if(RuleIndex != 24 && (matches = Matches_wrd_24()) != null)
+            {
+                return matches;
+            }
+            //wrd => THAN
+            if(RuleIndex != 25 && (matches = Matches_wrd_25()) != null)
+            {
+                return matches;
+            }
+            //wrd => GT
+            if(RuleIndex != 26 && (matches = Matches_wrd_26()) != null)
+            {
+                return matches;
+            }
+            //wrd => LT
+            if(RuleIndex != 27 && (matches = Matches_wrd_27()) != null)
+            {
+                return matches;
+            }
+            //wrd => AS
+            if(RuleIndex != 28 && (matches = Matches_wrd_28()) != null)
+            {
+                return matches;
+            }
+            //wrd => GTEQ
+            if(RuleIndex != 29 && (matches = Matches_wrd_29()) != null)
+            {
+                return matches;
+            }
+            //wrd => LTEQ
+            if(RuleIndex != 30 && (matches = Matches_wrd_30()) != null)
             {
                 return matches;
             }

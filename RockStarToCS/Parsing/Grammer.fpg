@@ -22,20 +22,24 @@ stmt => ass NL => x[0] as ParseNode
 stmt => io NL => x[0] as ParseNode
 stmt => incdec NL => x[0] as ParseNode
 stmt => psla NL => x[0] as ParseNode
-stmt => mult NL => x[0] as ParseNode
+stmt => arth NL => x[0] as ParseNode
 
 //functions
 
 //i/o
-io => SAY mult => new OutputParseNode(x[0] as Token, x[1] as ParseNode)
+io => SAY arth => new OutputParseNode(x[0] as Token, x[1] as ParseNode)
 io => LSTN var => new InputParseNode(x[0] as Token, x[1] as VariableParseNode)
 
 //assignments
-ass => var IS NULL => new AssignmentParseNode(x[1] as Token, new NullParseNode(x[2] as Token), x[0] as VariableParseNode)
-ass => var IS bool => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
-ass => var IS wrdlst => new AssignmentParseNode(x[1] as Token, x[2] as ParseNode, x[0] as VariableParseNode)
-ass => var IS STR => new AssignmentParseNode(x[1] as Token, x[2] as StringParseNode, x[0] as VariableParseNode)
-ass => PUT mult INTO var => new PutIntoParseNode(x[0] as Token, x[3] as VariableParseNode, x[1] as ParseNode)
+ass => var is NULL => new AssignmentParseNode((x[1] as TokenParseNode).T, new NullParseNode(x[2] as Token), x[0] as VariableParseNode)
+ass => var is bool => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as ParseNode, x[0] as VariableParseNode)
+ass => var is wrdlst => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as ParseNode, x[0] as VariableParseNode)
+ass => var is STR => new AssignmentParseNode((x[1] as TokenParseNode).T, x[2] as StringParseNode, x[0] as VariableParseNode)
+ass => PUT arth INTO var => new PutIntoParseNode(x[0] as Token, x[3] as VariableParseNode, x[1] as ParseNode)
+
+//is
+is => IS => new TokenParseNode(x[0] as Token)
+is => WAS => new TokenParseNode(x[0] as Token)
 
 //variables
 var => CVARSP WORD => new VariableParseNode(x[0] as Token, (x[0] as Token).Value.ToLower() + " " + (x[1] as Token).Value, false)
@@ -54,6 +58,11 @@ incdec => BLD var UP => new IncDecParseNode(x[0] as Token, x[1] as VariableParse
 incdec => KNK var DWN => new IncDecParseNode(x[0] as Token, x[1] as VariableParseNode, false)
 
 //arithmetic
+arth => comp => x[0] as ParseNode
+comp => mult IS NOT comp => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[3] as ParseNode)
+comp => mult AINT comp => new NeqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+comp => mult IS comp => new EqParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
+comp => mult => x[0] as ParseNode
 mult => add MULT mult => new MultiplyParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add DIV mult => new DivisionParseNode(x[1] as Token, x[0] as ParseNode, x[2] as ParseNode)
 mult => add => x[0] as ParseNode
@@ -65,6 +74,8 @@ add => atom => x[0] as ParseNode
 atom => bool => x[0] as ParseNode
 atom => var => x[0] as ParseNode
 atom => str => x[0] as ParseNode
+atom => NULL => new NullParseNode(x[0] as Token)
+atom => NUM => new NumberParseNode(x[0] as Token, (x[0] as Token).Value)
 
 //word lists
 wrdlst => wrdlst wrdlst => { var lst = x[0] as ParseNodeList; lst.Add(x[1] as ParseNode); return lst; }
@@ -72,6 +83,34 @@ wrdlst => wrd => new ParseNodeList(x[0] as ParseNode)
 
 wrd => WORD => new WordParseNode(x[0] as Token)
 wrd => CVARSP => new WordParseNode(x[0] as Token)
+wrd => PVAR => new WordParseNode(x[0] as Token)
+wrd => LVAR => new WordParseNode(x[0] as Token)
+wrd => PUT => new WordParseNode(x[0] as Token)
+wrd => INTO => new WordParseNode(x[0] as Token)
+wrd => IS => new WordParseNode(x[0] as Token)
+wrd => SAYS => new WordParseNode(x[0] as Token)
+wrd => ADD => new WordParseNode(x[0] as Token)
+wrd => SUB => new WordParseNode(x[0] as Token)
+wrd => MULT => new WordParseNode(x[0] as Token)
+wrd => DIV => new WordParseNode(x[0] as Token)
+wrd => BLD => new WordParseNode(x[0] as Token)
+wrd => KNK => new WordParseNode(x[0] as Token)
+wrd => UP => new WordParseNode(x[0] as Token)
+wrd => DOWN => new WordParseNode(x[0] as Token)
+wrd => SAY => new WordParseNode(x[0] as Token)
+wrd => LSTN => new WordParseNode(x[0] as Token)
+wrd => UNDEF => new WordParseNode(x[0] as Token)
+wrd => NULL => new WordParseNode(x[0] as Token)
+wrd => TRUE => new WordParseNode(x[0] as Token)
+wrd => FALSE => new WordParseNode(x[0] as Token)
+wrd => NOT => new WordParseNode(x[0] as Token)
+wrd => AINT => new WordParseNode(x[0] as Token)
+wrd => THAN => new WordParseNode(x[0] as Token)
+wrd => GT => new WordParseNode(x[0] as Token)
+wrd => LT => new WordParseNode(x[0] as Token)
+wrd => AS => new WordParseNode(x[0] as Token)
+wrd => GTEQ => new WordParseNode(x[0] as Token)
+wrd => LTEQ => new WordParseNode(x[0] as Token)
 
 //empty line
 //can match to a single empty line or many

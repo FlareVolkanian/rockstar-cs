@@ -67,6 +67,11 @@ namespace RockStarToCS
             {
                 Console.WriteLine("Syntax error on line: " + parser.HighestLine);
 #if DEBUG
+                //dump the tokens for inspection
+                foreach(Token t in tokens)
+                {
+                    Console.WriteLine(t.ToString());
+                }
                 Console.ReadLine();
 #endif
                 Environment.Exit(1);
