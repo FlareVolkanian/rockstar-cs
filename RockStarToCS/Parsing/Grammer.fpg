@@ -30,6 +30,7 @@ stmt => loop => x[0] as ParseNode
 
 //loops
 loop => WHILE arth NL blk => new WhileParseNode(x[0] as Token, x[1] as ParseNode, x[3] as ParseNode)
+loop => UNTIL arth NL blk => new UntilParseNode(x[0] as Token, x[1] as ParseNode, x[3] as ParseNode)
 
 //i/o
 io => SAY arth => new OutputParseNode(x[0] as Token, x[1] as ParseNode)

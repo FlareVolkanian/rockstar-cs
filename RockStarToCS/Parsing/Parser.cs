@@ -239,7 +239,7 @@ namespace RockStarToCS.Parsing
             return null;
         }
 
-        private ParseNode Matches_loop()
+        private ParseNode Matches_loop_1()
         {
             //loop => WHILE arth NL blk
             int ti = TokenIndex;
@@ -250,6 +250,36 @@ namespace RockStarToCS.Parsing
                 return f(matches);
             }
             TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_loop_2()
+        {
+            //loop => UNTIL arth NL blk
+            int ti = TokenIndex;
+            object[] matches = new object[4];
+            if((matches[0] = TokenMatches("UNTIL")) != null && (matches[1] = Matches_arth()) != null && (matches[2] = TokenMatches("NL")) != null && (matches[3] = Matches_blk()) != null)
+            {
+                Func<object[], ParseNode> f = x => new UntilParseNode(x[0] as Token, x[1] as ParseNode, x[3] as ParseNode);
+                return f(matches);
+            }
+            TokenIndex = ti;
+            return null;
+        }
+
+        private ParseNode Matches_loop(int RuleIndex=0)
+        {
+            ParseNode matches = null;
+            //loop => WHILE arth NL blk
+            if(RuleIndex != 1 && (matches = Matches_loop_1()) != null)
+            {
+                return matches;
+            }
+            //loop => UNTIL arth NL blk
+            if(RuleIndex != 2 && (matches = Matches_loop_2()) != null)
+            {
+                return matches;
+            }
             return null;
         }
 

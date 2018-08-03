@@ -76,6 +76,7 @@
     <Compile Include="Parsing\ParseNodes\StringLiteralAssignmentParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\StringParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\SubtractParseNode.cs" />
+    <Compile Include="Parsing\ParseNodes\UntilParseNode.cs" />
     <Compile Include="Parsing\ParseNodes\WhileParseNode.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\Tokeniser.cs" />
